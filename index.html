@@ -18,9 +18,10 @@
     crossorigin="anonymous"></script>
 
 <style>
-    html{
+    html {
         background-color: black;
     }
+
     #container {
         width: 100%;
         height: 100%;
@@ -42,9 +43,11 @@
         height: 500px;
     }
 
-    img{
+    img {
         width: 100%;
-        display: block; margin-left: auto; margin-right: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>
 
@@ -52,17 +55,35 @@
 <div id="imagesequence1">
     <img id="myimg1" src="./A/model1000.jpg"><br>
 </div>
-<div id = "space1"></div>
+<div id="space1"></div>
 <div id="trigger2"></div>
 <div id="imagesequence2">
     <img id="myimg2" src="./b/model2000.jpg"><br>
 </div>
 
 <script>
+    function preload() {
+        for (i = 0; i < preload.arguments.length; i++) {
+            images[i] = new Image();
+            images[i].src = preload.arguments[i];
+        }
+    }
+    preload(
+        "이미지경로/이미지파일1.jpg",
+        "이미지경로/이미지파일2.jpg",
+        "이미지경로/이미지파일3.jpg"
+    );
+
     const img_n = 125,
         per_duration = 2500;
     var images1 = [],
         images2 = [];
+        
+    for (var i = 0; i < img_n; i++) {
+        preload(`./A/model1${i.toString().padStart(3,'0')}.jpg`,
+            `./B/model2${i.toString().padStart(3,'0')}.jpg`
+        )
+    }
 
     for (var i = 0; i < img_n; i++) {
         images1.push(`./A/model1${i.toString().padStart(3,'0')}.jpg`);
