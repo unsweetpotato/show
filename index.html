@@ -62,17 +62,20 @@
 </div>
 
 <script>
+    var img_src1 = new Array();
+    var img_src2 = new Array();
+
     function preload() {
-        for (i = 0; i < preload.arguments.length; i++) {
-            images[i] = new Image();
-            images[i].src = preload.arguments[i];
-        }
+        img_temp1 = new Image();
+        img_temp2 = new Image();
+
+        img_temp1.src = preload.arguments[0];
+        img_temp2.src = preload.arguments[1];
+
+        img_src1.push(img_temp1);
+        img_src2.push(img_temp2);
     }
-    preload(
-        "이미지경로/이미지파일1.jpg",
-        "이미지경로/이미지파일2.jpg",
-        "이미지경로/이미지파일3.jpg"
-    );
+
 
     const img_n = 125,
         per_duration = 2500;
@@ -106,7 +109,7 @@
         immediateRender: true, // load first image automatically
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function () {
-            $("#myimg1").attr("src", images1[obj1.curImg]); // set the image source
+            $("#myimg1").attr("src", img_src1[obj1.curImg].src); // set the image source
         }
     });
 
@@ -117,7 +120,7 @@
         immediateRender: true, // load first image automatically
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function () {
-            $("#myimg2").attr("src", images2[obj2.curImg]); // set the image source
+            $("#myimg2").attr("src", img_src2[obj2.curImg].src); // set the image source
         }
     });
 
