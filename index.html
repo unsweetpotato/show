@@ -32,82 +32,48 @@
             align-items: center;
             width: 100%;
         }
-
     </style>
 </head>
 
 <body>
     <div id="scene1" class="container-fluid ">
-        <img id="model1" class="model" src="./test/test000.jpg">
+        <img id="model1" class="model">
     </div>
-    <!-- <div id="scene2" class="container-fluid">
-        <img id="model2" class="model" src="./b/model2000.jpg">
-    </div> -->
+    <div id="scene2" class="container-fluid ">
+        <img id="model2" class="model">
+    </div>
+    <div id="scene3" class="container-fluid ">
+        <img id="model3" class="model">
+    </div>
+    <div id="scene4" class="container-fluid ">
+        <img id="model4" class="model">
+    </div>
+    <div id="scene5" class="container-fluid ">
+        <img id="model5" class="model">
+    </div>
 </body>
 <script>
     $(function () {
-        var img_src1 = new Array();
-        var img_src2 = new Array();
-
-        function preload() {
-            img_temp1 = new Image();
-            // img_temp2 = new Image();
-
-            img_temp1.src = preload.arguments[0];
-            // img_temp2.src = preload.arguments[1];
-
-            img_src1.push(img_temp1);
-            // img_src2.push(img_temp2);
-        }
-
+        var model_list = [
+            'utopian01',
+            'utopian02',
+            'reflective01',
+            'reflective02',
+            'reflective03'
+        ];
+        var images = new Array(model_list.length);
 
         const img_n = 250,
             per_duration = 2500;
-        var images1 = [],
-            images2 = [];
 
-        for (var i = 0; i < img_n; i++) {
-            preload(`./test/test${i.toString().padStart(3,'0')}.jpg`
-                // `./B/model2${i.toString().padStart(3,'0')}.jpg`
-            )
-        }
-
-        for (var i = 0; i < img_n; i++) {
-            images1.push(`./A/model1${i.toString().padStart(3,'0')}.jpg`);
-            // images2.push(`./B/model2${i.toString().padStart(3,'0')}.jpg`);
-        }
-
-        // TweenMax can tween any property of any object. We use this object to cycle through the array
-        var obj1 = {
-            curImg: 0
-        };
-        var obj2 = {
-            curImg: 0
-        };
-
-        // create tween
-        var tween1 = TweenMax.to(obj1, 0.5, {
-            curImg: img_n - 1, // animate propery curImg to number of images
-            roundProps: "curImg", // only integers so it can be used as an array index
-            repeat: 0, // repeat 3 times
-            immediateRender: true, // load first image automatically
-            ease: Linear.easeNone, // show every image the same ammount of time
-            onUpdate: function () {
-                $("#model1").attr("src", img_src1[obj1.curImg].src); // set the image source
+        for (var j = 0; j < model_list.length; j++) {
+            images[j] = new Array();
+            for (var i = 0; i < img_n; i++) {
+                var img_temp = new Image();
+                img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
+                images[j].push(img_temp);
             }
-        });
-
-        // var tween2 = TweenMax.to(obj2, 0.5, {
-        //     curImg: img_n - 1, // animate propery curImg to number of images
-        //     roundProps: "curImg", // only integers so it can be used as an array index
-        //     repeat: 0, // repeat 3 times
-        //     immediateRender: true, // load first image automatically
-        //     ease: Linear.easeNone, // show every image the same ammount of time
-        //     onUpdate: function () {
-        //         $("#model2").attr("src", img_src2[obj2.curImg].src); // set the image source
-        //     }
-        // });
-
+        }
 
         // init controller
         var controller = new ScrollMagic.Controller({
@@ -116,32 +82,39 @@
             }
         });
 
-        // build scene
-        var scene1 = new ScrollMagic.Scene({
-                triggerElement: "#scene1",
-                //triggerHook: 0.25,
-                duration: per_duration,
-            })
-            .setPin("#scene1")
-            .setTween(tween1)
-            // .addIndicators({
-            //     name: "Model A"
-            // })
-            .addTo(controller);
+        // TweenMax can tween any property of any object. We use this object to cycle through the array
+        var currs = new Array(model_list.length);
 
-        // var scene2 = new ScrollMagic.Scene({
-        //         triggerElement: "#scene2",
-        //         //triggerHook: 0.25,
-        //         duration: per_duration,
-        //     })
-        //     .setPin("#scene2")
-        //     .setTween(tween2)
-        //     // .addIndicators({
-        //     //     name: "Model B"
-        //     // })
-        //     .addTo(controller);
+        for (var i = 0; i < model_list.length; i++) {
+            currs[i] = {
+                cur_img: 0
+            };
+
+            // create tween
+            var tween = TweenMax.to(currs[i], 1/model_list.length, {
+                cur_img: img_n - 1,
+                roundProps: "cur_img",
+                repeat: 0,
+                immediateRender: true,
+                ease: Linear.easeNone, // show every image the same ammount of time
+                onUpdate: function (model_name) {
+                    console.log(images[model_name][currs[model_name].cur_img].src);
+                    $(`#model${model_name+1}`).attr("src", images[model_name][currs[model_name].cur_img].src);
+                },
+                onUpdateParams: [i]
+            });
+
+            // build scene
+            var scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    //triggerHook: 0.25,
+                    duration: per_duration,
+                })
+                .setPin(`#scene${i+1}`)
+                .setTween(tween)
+                .addTo(controller);
+        }
     });
-
 </script>
 
 </html>
