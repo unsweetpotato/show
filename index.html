@@ -81,7 +81,7 @@
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
                 images[j].push(img_temp);
                 progress = progress + 1;
-                $('.progress-bar').css('width', progress+'%').attr("aria-valuenow", progress);
+                $('.progress-bar').css('width', 1750/progress*100+'%').attr("aria-valuenow", progress);
                 
             }
         }
