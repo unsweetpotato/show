@@ -33,6 +33,10 @@
             align-items: center;
             width: 100%;
         }
+
+        .container-fluid{
+            display: none;
+        }
     </style>
 </head>
 
@@ -86,6 +90,7 @@
             }
         }
 
+        $('.container-fluid').css('display', 'block');
         // init controller
         var controller = new ScrollMagic.Controller({
             globalSceneOptions: {
