@@ -25,6 +25,7 @@
             vertical-align: middle;
             padding-left: 0px;
             padding-right: 0px;
+            max-height:100%;
         }
 
         .model {
@@ -36,6 +37,12 @@
 </head>
 
 <body>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="1750">
+          <span class="sr-only">70% Complete</span>
+        </div>
+      </div>
     <div id="scene1" class="container-fluid ">
         <img id="model1" class="model">
     </div>
@@ -61,17 +68,21 @@
             'reflective02',
             'reflective03'
         ];
+        var progress = 0;
         var images = new Array(model_list.length);
-
         const img_n = 250,
             per_duration = 2500;
 
         for (var j = 0; j < model_list.length; j++) {
             images[j] = new Array();
             for (var i = 0; i < img_n; i++) {
+                
                 var img_temp = new Image();
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
                 images[j].push(img_temp);
+                progress = progress + 1;
+                $('.progress-bar').css('width', progress+'%').attr("aria-valuenow", progress);
+                
             }
         }
 
