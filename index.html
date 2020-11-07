@@ -20,7 +20,7 @@
             background-color: black;
             align-items: center;
             height: 100%;
-  overflow: hidden;
+            overflow: hidden;
         }
 
         .progress {
@@ -30,8 +30,9 @@
             transform: translate(0%, -50%);
             width: 40%;
             z-index: 10;
+            margin-top: auto;
+            margin-bottom: auto;
         }
-
 
         .model {
             max-width: 100%;
@@ -42,16 +43,11 @@
         .container-fluid {
             z-index: 0;
         }
-
-        .align-middle {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
     </style>
 </head>
 
 <body>
-    <div class="progress align-middle">
+    <div class="progress">
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
             aria-valuemax="1750">
             <span class="sr-only">70% Complete</span>
@@ -87,7 +83,8 @@
                     progress += 1;
                     // Update progress bar
                     if (progress % img_n == 0) {
-                        $('.progress-bar').css('width', progress / (model_list.length * img_n) * 100 + '%').attr("aria-valuenow", progress);
+                        $('.progress-bar').css('width', progress / (model_list.length * img_n) * 100 +
+                            '%').attr("aria-valuenow", progress);
                     }
                     // End of loading
                     if (progress == img_n * model_list.length) {
@@ -95,7 +92,7 @@
                         $('.container-fluid').css('visibility', 'visible');
                         $('.progress').css('display', 'none');
                         console.log("gg");
-                        
+
                     }
                 });
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
