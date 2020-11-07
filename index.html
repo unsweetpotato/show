@@ -18,62 +18,57 @@
     <style>
         body {
             background-color: black;
+            align-items: center;
+            height: 100%;
+  overflow: hidden;
         }
 
-        .container-fluid {
-            background-color: black;
-            vertical-align: middle;
-            padding-left: 0px;
-            padding-right: 0px;
-            max-height: 100%;
+        .progress {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(0%, -50%);
+            width: 40%;
+            z-index: 10;
         }
+
 
         .model {
-            background-color: black;
+            max-width: 100%;
+            max-height: 100%;
             align-items: center;
-            width: 100%;
         }
 
         .container-fluid {
-            display: none;
+            z-index: 0;
+        }
+
+        .align-middle {
+            margin-top: auto;
+            margin-bottom: auto;
         }
     </style>
 </head>
 
 <body>
-    <div class="progress">
+    <div class="progress align-middle">
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
             aria-valuemax="1750">
             <span class="sr-only">70% Complete</span>
         </div>
     </div>
-    <div id="scene1" class="container-fluid ">
-        <img id="model1" class="model">
-    </div>
-    <div id="scene2" class="container-fluid ">
-        <img id="model2" class="model">
-    </div>
-    <div id="scene3" class="container-fluid ">
-        <img id="model3" class="model">
-    </div>
-    <div id="scene4" class="container-fluid ">
-        <img id="model4" class="model">
-    </div>
-    <div id="scene5" class="container-fluid ">
-        <img id="model5" class="model">
-    </div>
 </body>
 <script>
     $(function () {
-        var model_list = [
+        let model_list = [
             'utopian01',
             'utopian02',
             'reflective01',
             'reflective02',
             'reflective03'
         ];
-        var progress = 0;
-        var images = new Array(model_list.length);
+        let progress = 0;
+        let images = new Array(model_list.length);
         const img_n = 250,
             per_duration = 2500;
 
@@ -82,32 +77,45 @@
          */
         for (var j = 0; j < model_list.length; j++) {
             images[j] = new Array();
+            // Create scene
+            document.body.innerHTML +=
+                `<div id="scene${j+1}" class="container-fluid" style="visibility:hidden"><img id="model${j+1}" class="model"></div>`;
+
             for (var i = 0; i < img_n; i++) {
                 var img_temp = new Image();
+                img_temp.addEventListener('load', () => {
+                    progress += 1;
+                    // Update progress bar
+                    if (progress % img_n == 0) {
+                        $('.progress-bar').css('width', progress / (model_list.length * img_n) * 100 + '%').attr("aria-valuenow", progress);
+                    }
+                    // End of loading
+                    if (progress == img_n * model_list.length) {
+                        document.body.style.overflow = 'visible';
+                        $('.container-fluid').css('visibility', 'visible');
+                        $('.progress').css('display', 'none');
+                        console.log("gg");
+                        
+                    }
+                });
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
                 images[j].push(img_temp);
-                progress = progress + 1;
-                $('.progress-bar').css('width', 1750 / progress * 100 + '%').attr("aria-valuenow", progress);
             }
         }
-        $('.progress').css('display', 'none');
-        $('.container-fluid').css('display', 'block');
-
 
         /*
          * Scroll Animation
-         * 
          */
-        
+
         // init controller
-        var controller = new ScrollMagic.Controller({
+        let controller = new ScrollMagic.Controller({
             globalSceneOptions: {
                 triggerHook: 0
             }
         });
 
         // TweenMax can tween any property of any object. We use this object to cycle through the array
-        var currs = new Array(model_list.length);
+        let currs = new Array(model_list.length);
 
         for (var i = 0; i < model_list.length; i++) {
             currs[i] = {
@@ -133,7 +141,6 @@
             // build scene
             var scene = new ScrollMagic.Scene({
                     triggerElement: `#scene${i+1}`,
-                    //triggerHook: 0.25,
                     duration: per_duration,
                 })
                 .setPin(`#scene${i+1}`)
