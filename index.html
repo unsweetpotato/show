@@ -25,7 +25,7 @@
             vertical-align: middle;
             padding-left: 0px;
             padding-right: 0px;
-            max-height:100%;
+            max-height: 100%;
         }
 
         .model {
@@ -34,7 +34,7 @@
             width: 100%;
         }
 
-        .container-fluid{
+        .container-fluid {
             display: none;
         }
     </style>
@@ -42,11 +42,11 @@
 
 <body>
     <div class="progress">
-        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0"
-        aria-valuemin="0" aria-valuemax="1750">
-          <span class="sr-only">70% Complete</span>
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+            aria-valuemax="1750">
+            <span class="sr-only">70% Complete</span>
         </div>
-      </div>
+    </div>
     <div id="scene1" class="container-fluid ">
         <img id="model1" class="model">
     </div>
@@ -77,20 +77,28 @@
         const img_n = 250,
             per_duration = 2500;
 
+        /*
+         * Image Loading
+         */
         for (var j = 0; j < model_list.length; j++) {
             images[j] = new Array();
             for (var i = 0; i < img_n; i++) {
-                
                 var img_temp = new Image();
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
                 images[j].push(img_temp);
                 progress = progress + 1;
-                $('.progress-bar').css('width', 1750/progress*100+'%').attr("aria-valuenow", progress);
-                
+                $('.progress-bar').css('width', 1750 / progress * 100 + '%').attr("aria-valuenow", progress);
             }
         }
-
+        $('.progress').css('display', 'none');
         $('.container-fluid').css('display', 'block');
+
+
+        /*
+         * Scroll Animation
+         * 
+         */
+        
         // init controller
         var controller = new ScrollMagic.Controller({
             globalSceneOptions: {
@@ -107,7 +115,7 @@
             };
 
             // create tween
-            var tween = TweenMax.to(currs[i], 1/model_list.length, {
+            var tween = TweenMax.to(currs[i], 1 / model_list.length, {
                 cur_img: img_n - 1,
                 roundProps: "cur_img",
                 repeat: 0,
@@ -115,7 +123,9 @@
                 ease: Linear.easeNone, // show every image the same ammount of time
                 onUpdate: function (model_name) {
                     console.log(images[model_name][currs[model_name].cur_img].src);
-                    $(`#model${model_name+1}`).attr("src", images[model_name][currs[model_name].cur_img].src);
+                    $(`#model${model_name+1}`).attr("src", images[model_name][currs[model_name]
+                        .cur_img
+                    ].src);
                 },
                 onUpdateParams: [i]
             });
