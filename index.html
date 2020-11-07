@@ -67,7 +67,8 @@
         let progress = 0;
         let images = new Array(model_list.length);
         const img_n = 250,
-            per_duration = 2500;
+            per_center_duration = window.screen.height,
+            per_leave_duration = window.screen.height*0.5;
 
         /*
          * Image Loading
@@ -119,7 +120,7 @@
             };
 
             // create tween
-            var tween = TweenMax.to(currs[i], 1 / model_list.length, {
+            var center_tween = TweenMax.to(currs[i], 1 / model_list.length, {
                 cur_img: img_n - 1,
                 roundProps: "cur_img",
                 repeat: 0,
@@ -133,13 +134,27 @@
                 onUpdateParams: [i]
             });
 
-            // build scene
-            var scene = new ScrollMagic.Scene({
+            var leave_tween = TweenMax.to(`#model${i+1}`, 1, {opacity:0});
+
+            // center scene
+            var center_scene = new ScrollMagic.Scene({
                     triggerElement: `#scene${i+1}`,
-                    duration: per_duration,
+                    duration: per_center_duration,
                 })
                 .setPin(`#scene${i+1}`)
-                .setTween(tween)
+                .setTween(center_tween)
+                .addIndicators({name: `center model ${i+1}`})
+                .addTo(controller);
+            
+            // leave scene
+            var leave_scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    triggerHook: "onLeave",
+                    offset: per_center_duration,
+                    duration: per_leave_duration,
+                })
+                .setTween(leave_tween)
+                .addIndicators({name: `leave model ${i+1}`})
                 .addTo(controller);
         }
     });
