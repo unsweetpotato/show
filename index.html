@@ -91,8 +91,6 @@
                         document.body.style.overflow = 'visible';
                         $('.container-fluid').css('visibility', 'visible');
                         $('.progress').css('display', 'none');
-                        console.log("gg");
-
                     }
                 });
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
@@ -127,7 +125,6 @@
                 immediateRender: true,
                 ease: Linear.easeNone, // show every image the same ammount of time
                 onUpdate: function (model_name) {
-                    console.log(images[model_name][currs[model_name].cur_img].src);
                     $(`#model${model_name+1}`).attr("src", images[model_name][currs[model_name]
                         .cur_img
                     ].src);
