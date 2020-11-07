@@ -43,6 +43,7 @@
         .model {
             max-width: 100%;
             max-height: 100%;
+            opacity:0;
         }
     </style>
 </head>
@@ -67,8 +68,9 @@
         let progress = 0;
         let images = new Array(model_list.length);
         const img_n = 250,
-            per_center_duration = window.screen.height,
-            per_leave_duration = window.screen.height*0.5;
+            per_enter_duration = document.documentElement.clientHeight * 0.5,
+            per_center_duration = document.documentElement.clientHeight,
+            per_leave_duration = document.documentElement.clientHeight * 0.5;
 
         /*
          * Image Loading
@@ -93,6 +95,7 @@
                         document.body.style.overflow = 'visible';
                         $('.container').css('visibility', 'visible');
                         $('.progress').css('display', 'none');
+                        ImageLoadedEnd();
                     }
                 });
                 img_temp.src = `./assets/${model_list[j]}/${model_list[j]}${i.toString().padStart(3,'0')}.jpg`;
@@ -100,6 +103,7 @@
             }
         }
 
+        function ImageLoadedEnd() {
         /*
          * Scroll Animation
          */
@@ -120,6 +124,8 @@
             };
 
             // create tween
+            var enter_tween = TweenMax.to(`#model${i+1}`, 1, {opacity:1});
+
             var center_tween = TweenMax.to(currs[i], 1 / model_list.length, {
                 cur_img: img_n - 1,
                 roundProps: "cur_img",
@@ -135,6 +141,17 @@
             });
 
             var leave_tween = TweenMax.to(`#model${i+1}`, 1, {opacity:0});
+
+            // enter scene
+            var enter_scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    triggerHook: "onEnter",
+                    offset: -per_enter_duration,
+                    duration: per_enter_duration,
+                })
+                .setTween(enter_tween)
+                .addIndicators({name: `enter model ${i+1}`})
+                .addTo(controller);
 
             // center scene
             var center_scene = new ScrollMagic.Scene({
@@ -156,6 +173,8 @@
                 .setTween(leave_tween)
                 .addIndicators({name: `leave model ${i+1}`})
                 .addTo(controller);
+        }
+
         }
     });
 </script>
