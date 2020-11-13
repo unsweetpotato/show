@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
@@ -11,121 +13,185 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/animation.velocity.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/debug.addIndicators.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/jquery.ScrollMagic.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+    </script>
 
     <style>
         body {
             background-color: black;
+            height: 100%;
+            overflow: hidden;
         }
 
-        .container-fluid {
-            background-color: black;
-            vertical-align: middle;
-            padding-left: 0px;
-            padding-right: 0px;
+        .progress {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(0%, -50%);
+            width: 40%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
             max-height: 100%;
+            padding-left: 0;
+            padding-right: 0;
+            display: flex;
         }
 
         .model {
-            background-color: black;
-            align-items: center;
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
-    <div id="scene1" class="container-fluid ">
-        <video loop autoplay playsinline muted id="model1" class="model">
-            <source src="./assets/utopian01.mp4" type='video/mp4' />
-        </video>
-    </div>
-    <div id="scene2" class="container-fluid ">
-        <video loop autoplay playsinline muted id="model2" class="model">
-            <source src="./assets/utopian02.mp4" type='video/mp4' />
-        </video>
-    </div>
-    <div id="scene3" class="container-fluid ">
-        <video loop autoplay playsinline muted id="model3" class="model">
-            <source src="./assets/reflective01.mp4" type='video/mp4' />
-        </video>
-    </div>
-    <div id="scene4" class="container-fluid ">
-        <video loop autoplay playsinline muted id="model4" class="model">
-            <source src="./assets/reflective02.mp4" type='video/mp4' />
-        </video>
-    </div>
-    <div id="scene5" class="container-fluid ">
-        <video loop autoplay playsinline muted id="model5" class="model">
-            <source src="./assets/reflective03.mp4" type='video/mp4' />
-        </video>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+            aria-valuemax="12">
+            <span class="sr-only">70% Complete</span>
+        </div>
     </div>
 </body>
 <script>
     $(function () {
-        var model_list = [
-            'utopian01',
-            'utopian02',
-            'reflective01',
-            'reflective02',
-            'reflective03'
+        let model_list = [
+            'abstract01',
+            'abstract02',
+            'abstract03',
+            'abstract04',
+            'abstract05',
+            'abstract06',
+            'abstract07',
+            'abstract08',
+            'abstract09',
+            'abstract10',
+            'abstract11',
+            'abstract12',
         ];
+        let progress = 0;
+        let videos = new Array(model_list.length);
 
-        var control = new ScrollMagic.Controller();
-        var scrollPos = 0;
-        var lastPos = scrollPos;
-        var per_duration = 2500;
+        const time_per_frame = 1 / 25.0;
+        const per_enter_duration = document.documentElement.clientHeight * 0.8,
+            per_center_duration = document.documentElement.clientHeight * 4,
+            per_leave_duration = document.documentElement.clientHeight * 0.8;
 
-        for (var i = 0; i < 1; i++) {
-            var vid = document.getElementById(`model${i+1}`);
-            var h = document.getElementById(`model${i+1}`);
-
-            var sc1 = new ScrollMagic.Scene({
-                triggerElement: `#scene${i+1}`,
-                duration: per_duration
-            })
-            .setPin(`#scene${i+1}`);
-
-            const startAnim = () => {
-                sc1.addTo(control)
-                    .on("progress", (e) => {
-                        scrollPos = e.progress;
-                        console.log("TIME : ", scrollPos);
-                    });
-
-                setInterval(() => {
-                    if (lastPos === scrollPos) return;
-                    requestAnimationFrame(() => {
-                        vid.currentTime = vid.duration * scrollPos;
-                        console.log(scrollPos, vid.duration, vid.currentTime);
-                        vid.pause();
-                        lastPos = scrollPos;
-                    });
-                }, 10);
-            }
-
-            const preloadVid = (v, callback) => {
-                const ready = () => {
-                    v.removeEventListener('canplaythrough', ready);
-                    let i = setInterval(() => {
-                        vid.pause();
-                        if (v.readyState > 3) {
-                            clearInterval(i);
-                            vid.currentTime = 0;
-                            callback();
-                        }
-                    }, 50)
+        /*
+         * Image Loading
+         */
+        for (var i = 0; i < model_list.length; i++) {
+            // Create scene
+            document.body.innerHTML +=
+                `<div id="scene${i+1}" class="container" style="visibility:hidden">
+                <video id="video${i+1}" src = "./assets/${model_list[i]}.mp4" class="model mx-auto my-auto" preload="auto">
+                </div>`;
+            var video = document.getElementById(`video${i+1}`);
+            video.oncanplay = function () {
+                progress += 1;
+                $('.progress-bar').css('width', progress / model_list.length * 100 +
+                    '%').attr("aria-valuenow", progress);
+                if (progress == model_list.length) {
+                    document.body.style.overflow = 'visible';
+                    $('.container').css('visibility', 'visible');
+                    $('.progress').css('display', 'none');
                 }
-
-                v.addEventListener('canplaythrough', ready, false);
-                v.play();
             }
-
-            preloadVid(vid, startAnim)
+            // End of loading
         }
 
+        AssetLoadedEnd();
+
+        function AssetLoadedEnd() {}
+        /*
+         * Scroll Animation
+         */
+
+        // init controller
+        let controller = new ScrollMagic.Controller({
+            globalSceneOptions: {
+                triggerHook: 0
+            }
+        });
+
+        // // TweenMax can tween any property of any object. We use this object to cycle through the array
+        let currs = new Array(model_list.length);
+
+        for (var i = 0; i < model_list.length; i++) {
+            currs[i] = {
+                cur_frame: 0
+            };
+
+            // create tween
+            var enter_tween = TweenMax.to(`#scene${i+1}`, 1, {
+                opacity: 1
+            });
+
+            var center_tween = TweenMax.to(currs[i], 1 / model_list.length, {
+                cur_frame: 249,
+                roundProps: "cur_frame",
+                repeat: 0,
+                immediateRender: true,
+                ease: Linear.easeNone, // show every image the same ammount of time
+                onUpdate: function (model_name) {
+                    document.getElementById(`video${model_name+1}`).currentTime = currs[model_name]
+                        .cur_frame * time_per_frame;
+                    var video = document.getElementById(`video${model_name+1}`);
+                },
+                onUpdateParams: [i]
+            });
+
+            var leave_tween = TweenMax.to(`#scene${i+1}`, 1, {
+                opacity: 0
+            });
+
+            // enter scene
+            var enter_scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    triggerHook: "onEnter",
+                    duration: per_enter_duration,
+                })
+                .setTween(enter_tween)
+                .addIndicators({
+                    name: `enter model ${i+1}`
+                })
+                .addTo(controller);
+
+            // center scene
+            var center_scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    duration: per_center_duration,
+                })
+                .setPin(`#scene${i+1}`)
+                .setTween(center_tween)
+                .addIndicators({
+                    name: `center model ${i+1}`
+                })
+                .addTo(controller);
+
+            // leave scene
+            var leave_scene = new ScrollMagic.Scene({
+                    triggerElement: `#scene${i+1}`,
+                    triggerHook: "onLeave",
+                    offset: per_center_duration,
+                    duration: per_leave_duration,
+                })
+                .setTween(leave_tween)
+                .addIndicators({
+                    name: `leave model ${i+1}`
+                })
+                .addTo(controller);
+        }
     });
 </script>
 
