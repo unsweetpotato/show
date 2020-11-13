@@ -66,18 +66,18 @@
 <script>
     $(function () {
         let model_list = [
-            'abstract01',
-            'abstract02',
-            'abstract03',
-            'abstract04',
-            'abstract05',
-            'abstract06',
-            'abstract07',
-            'abstract08',
-            'abstract09',
-            'abstract10',
-            'abstract11',
-            'abstract12',
+            '1GE68PN5_2Gutd2FaVidXAXgMMROZV4HX',
+            '1w6iojFSiMYG7Yz4ncyn9vQIm-p2_0U1k',
+            '1ZgXMzVndrkEKrkz_BhdlMOmqI78uvqBV',
+            '1v5GXew837oQRD0cI1xyv3lfYaZRzie3R',
+            '1VmcUtOsTNPA1y5Hdw-Lbu1zstFupA7tc',
+            '1zjAGRTbfPWixGBqZHrWuB1F8f0NDoJw2',
+            '1Ux-r6g83lPatSz_eMkJ7d6KLLIpqz91v',
+            '1mBLd_a4QZlYP8YFX2-PVraN4XMJ1-atD',
+            '1pjjwhhwWIsOjPkNjlpxn-DmnmEWFnhF8',
+            '1MouCAxXyj-Sv1Y-9GsdAJ1-1dBHZzKQ4',
+            '1UXXWFdpzFbN0FcFLTEcOIjGNEv3lp-ML',
+            '14hnv1rcpXpNRPcrW1lPAphifgptfMtvc',
         ];
         let progress = 0;
         let videos = new Array(model_list.length);
@@ -94,7 +94,7 @@
             // Create scene
             document.body.innerHTML +=
                 `<div id="scene${i+1}" class="container" style="visibility:hidden">
-                <video id="video${i+1}" src = "./assets/${model_list[i]}.mp4" class="model mx-auto my-auto" preload="auto">
+                <video id="video${i+1}" src = "https://drive.google.com/uc?id=${model_list[i]}" class="model mx-auto my-auto" preload="auto">
                 </div>`;
             var video = document.getElementById(`video${i+1}`);
             video.oncanplay = function () {
