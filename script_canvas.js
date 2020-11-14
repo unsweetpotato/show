@@ -1,5 +1,5 @@
 $(function () {
-    const video_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
+    const video_url = 'https://player.vimeo.com/external/479247194.hd.mp4?s=79f365c1fb6308a16884b4d60aadd2720316bf29&profile_id=174';
     const time_per_frame = 1 / 25.0;
     const per_enter_duration = document.documentElement.clientHeight * 0.5,
         per_center_duration = document.documentElement.clientHeight * 4,
@@ -30,7 +30,10 @@ $(function () {
             </div>`;
 
     }
-
+    document.body.style.overflow = 'visible';
+    $('.container').css('visibility', 'visible');
+    $('.progress').css('display', 'none');
+    console.log("2020-11-14");
     window.addEventListener('resize', resizeCanvas, false);
 
     function resizeCanvas() {
@@ -56,7 +59,6 @@ $(function () {
     let currs = new Array(model_n);
 
     for (var i = 0; i < model_n; i++) {
-
         currs[i] = {
             cur_frame: 0
         };
