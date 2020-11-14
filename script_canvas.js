@@ -26,7 +26,6 @@ $(function () {
      */
     document.body.innerHTML += `<video id="video" style="display:none">
     <source src = "${video_mp4_url}" type="video/mp4">
-    <source src = "${video_ogg_url}" type="video/ogg">
     </video>`;
     var video = document.getElementById('video');
 
