@@ -1,17 +1,17 @@
 $(function () {
     const model_list = [
-        'https://player.vimeo.com/external/479232028.source.mp4?s=6991002ec72507570cf3c616f10cf7173b3d4a60&download=1',
-        'https://player.vimeo.com/external/479232043.hd.mp4?s=47a78e9bd1e2826af90cd1cac94b7a61e9a580c9&profile_id=174',
-        'https://player.vimeo.com/external/479232063.hd.mp4?s=6001ac50e0e2a7aaf74599673814b2149acd9785&profile_id=174',
-        'https://player.vimeo.com/external/479232095.hd.mp4?s=968108d4abc411f8ca3a155150be534e77f8a22d&profile_id=174',
-        'https://player.vimeo.com/external/479232107.hd.mp4?s=09c4e25f87652ad8fa95d89736b6af020fb70377&profile_id=174',
-        'https://player.vimeo.com/external/479232123.hd.mp4?s=389a78cc7980a95ab54300fd234fed84a48fc57d&profile_id=174',
-        'https://player.vimeo.com/external/479232143.sd.mp4?s=875bb5f8c376bf27a73c82a0a691740b6c4580fb&profile_id=164',
-        'https://player.vimeo.com/external/479232214.hd.mp4?s=78d616d7175bf9a6a80b0ee620aa28287dbbb9c3&profile_id=174',
-        'https://player.vimeo.com/external/479232267.hd.mp4?s=52edfb9a3d29886ce7e0591a83ba3f36b93750f6&profile_id=174',
-        'https://player.vimeo.com/external/479232235.hd.mp4?s=bfce82fa0218d6bd550ff7181fe8204288335ce1&profile_id=174',
-        'https://player.vimeo.com/external/479232278.hd.mp4?s=3939113fc0f73835367ac5ee095cd473e9c9bb65&profile_id=174',
-        'https://player.vimeo.com/external/479232289.hd.mp4?s=0573e4b9129d6951298a70e2f5d4af14c3684d74&profile_id=174',
+        './assets/abstract01.mp4',
+        './assets/abstract02.mp4',
+        './assets/abstract03.mp4',
+        './assets/abstract04.mp4',
+        './assets/abstract05.mp4',
+        './assets/abstract06.mp4',
+        './assets/abstract07.mp4',
+        './assets/abstract08.mp4',
+        './assets/abstract09.mp4',
+        './assets/abstract10.mp4',
+        './assets/abstract11.mp4',
+        './assets/abstract12.mp4',
     ];
     const time_per_frame = 1 / 25.0;
     const per_enter_duration = document.documentElement.clientHeight * 0.5,
@@ -32,11 +32,11 @@ $(function () {
         document.getElementById(`video${i+1}`).addEventListener('canplay', function(event) {
             progress += 1;
             $('.progress-bar').css('width', progress / model_list.length * 100 + '%').attr("aria-valuenow", progress);
-            // if (progress == model_list.length) {
+            if (progress == model_list.length) {
                 document.body.style.overflow = 'visible';
                 $('.container').css('visibility', 'visible');
                 $('.progress').css('display', 'none');
-            // }
+            }
         });
     }
 
