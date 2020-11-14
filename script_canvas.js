@@ -6,12 +6,21 @@ $(function () {
         per_leave_duration = document.documentElement.clientHeight * 0.5;
     const model_n = 12;
     let progress = 0;
-
+    var wx = window.innerWidth, wy = window.innerHeight;
+    if (wx/wy >= 1920/1080) { //가로가 더 큰 경우라 세로에 맞춘다.
+        var w = wy * 1920/1080, h = wy;
+        var ox = (wx-w)/2, oy = 0;
+    } else {
+        var w = wx, h = wx * 1080/1920;
+        var ox = 0, oy = (wy-h)/2;
+    }
     /*
      * Video Loading
      */
-    document.body.innerHTML += `<video id="video" src = "${video_url}" class="model mx-auto my-auto" style="display:none">`;
+    document.body.innerHTML += `<video id="video" src = "${video_url}" style="display:none">`;
     var video = document.getElementById('video');
+
+
     video.addEventListener('canplay', function (event) {
         progress += 1;
         // $('.progress-bar').css('width',  * 100 + '%').attr("aria-valuenow", progress);
@@ -30,17 +39,23 @@ $(function () {
             </div>`;
 
     }
-    document.body.style.overflow = 'visible';
-    $('.container').css('visibility', 'visible');
-    $('.progress').css('display', 'none');
+
     console.log("2020-11-14");
     window.addEventListener('resize', resizeCanvas, false);
 
     function resizeCanvas() {
+        var wx = window.innerWidth, wy = window.innerHeight;
+        if (wx/wy >= 1920/1080) { //가로가 더 큰 경우라 세로에 맞춘다.
+            var w = wy * 1920/1080, h = wy;
+            var ox = (wx-w)/2, oy = 0;
+        } else {
+            var w = wx, h = wx * 1080/1920;
+            var ox = 0, oy = (wy-h)/2;
+        }
         for (var i = 0; i < model_n; i++) {
             var canvas = document.getElementById(`canvas${i+1}`);
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = wx;
+            canvas.height = wy;
         }
     }
     resizeCanvas();
@@ -78,7 +93,7 @@ $(function () {
                 video.currentTime = ((250 * model_name) + currs[model_name].cur_frame) * time_per_frame;
 
                 var ctx = document.getElementById(`canvas${model_name+1}`).getContext('2d');
-                ctx.drawImage(video, 0, 0);
+                ctx.drawImage(video, ox, oy, w, h);
             },
             onUpdateParams: [i]
         });
