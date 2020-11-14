@@ -57,7 +57,7 @@ $(function () {
 
     }
 
-    console.log("2020-11-14 hi");
+    console.log("2020-11-14 hig");
 
     function resizeCanvas() {
         wx = window.innerWidth, wy = window.innerHeight;
