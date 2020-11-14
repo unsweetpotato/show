@@ -27,7 +27,7 @@ $(function () {
         // Create scene
         document.body.innerHTML +=
             `<div id="scene${i+1}" class="container" style="visibility:hidden">
-                <video id="video${i+1}" src = "${model_list[i]}" class="model mx-auto my-auto" preload="auto">
+                <video id="video${i+1}" src = "${model_list[i]}" class="model mx-auto my-auto">
                 </div>`;
         document.getElementById(`video${i+1}`).addEventListener('canplay', function(event) {
             progress += 1;
