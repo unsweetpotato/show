@@ -1,0 +1,35 @@
+@charset "utf-8";
+
+body {
+    background-color: black;
+    height: 100%;
+    overflow: hidden;
+}
+
+.progress {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(0%, -50%);
+    width: 40%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    opacity: 0;
+}
+
+.model {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    
+}
