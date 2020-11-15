@@ -1,6 +1,5 @@
 $(function () {
     const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
-    const video_ogg_url = 'https://player.vimeo.com/external/479258911.source.ogv?s=4139b3726bbeb296b2bc41e51d905269e67e166d&download=1';
     const time_per_frame = 0.04;
     const per_enter_duration = document.documentElement.clientHeight * 0.5,
         per_center_duration = document.documentElement.clientHeight * 4,
@@ -8,65 +7,32 @@ $(function () {
     const model_n = 12,
         frame_per_model = 250;
     let progress = 0;
-    var wx = window.innerWidth,
-        wy = window.innerHeight,
-        w, h, ox, oy;
 
     console.log("2020-11-14 hig");
 
     /*
      * Video Loading
      */
-    document.body.innerHTML += `
-    <video id="video" style="display:none">
-        <source src = "${video_mp4_url}" type="video/mp4">
-    </video>`;
-    var video = document.getElementById('video');
 
     function videoloaded (event) {
-        resizeCanvas();
-        document.body.style.overflow = 'visible';
-        $('.container').css('visibility', 'visible');
-        $('.spinner-grow').css('display', 'none');
-        video.removeEventListener('canplaythrough', videoloaded);
-        // document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
-    }
-    video.addEventListener('canplaythrough', videoloaded);
+        progress += 1;
+        console.log(progress);
+        // if (progress == model_n) {
+            document.body.style.overflow = 'visible';
+            $('.container').css('visibility', 'visible');
+            $('.spinner-grow').css('display', 'none');
+        // }
 
+    }
     // Create scene and canvas
     for (var i = 0; i < model_n; i++) {
         document.body.innerHTML +=
             `<div id="scene${i+1}" class="container" style="visibility:hidden">
-                <canvas id="canvas${i+1}" class="model">
+                <video id="canvas${i+1}" src ="${video_mp4_url}" class="model">
             </div>`;
+        document.getElementById(`canvas${i+1}`).addEventListener('canplaythrough', videoloaded);
     }
 
-    function resizeCanvas() {
-        wx = window.innerWidth, wy = window.innerHeight;
-        if (wx / wy >= 1920 / 1080) { //가로가 더 큰 경우라 세로에 맞춘다.
-            w = wy * 1920 / 1080, h = wy;
-            ox = (wx - w) / 2, oy = 0;
-        } else {
-            w = wx, h = wx * 1080 / 1920;
-            ox = 0, oy = (wy - h) / 2;
-        }
-        for (var i = 0; i < model_n; i++) {
-            var canvas = document.getElementById(`canvas${i+1}`);
-            canvas.width = wx;
-            canvas.height = wy;
-        }
-    }
-
-    function redraw() {
-        console.log(video.played);
-        for (var i = 0; i < model_n; i++) {
-            document.getElementById(`canvas${i+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
-        }
-    }
-
-    
-    window.addEventListener('resize', resizeCanvas, false);
-    window.addEventListener('resize', redraw, false);
     /*
      * Scroll Animation
      */
@@ -98,10 +64,9 @@ $(function () {
             immediateRender: true,
             ease: Linear.easeNone, // show every image the same ammount of time
             onUpdate: function (model_name) {
-                console.log(`canvas${model_name}-${currs[model_name].cur_frame}`)
+                console.log(`canvas${model_name}-${currs[model_name].cur_frame}`);
+                var video = document.getElementById(`canvas${model_name+1}`);
                 video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
-                var ctx = document.getElementById(`canvas${model_name+1}`).getContext('2d');
-                ctx.drawImage(video, ox, oy, w, h);
             },
             onUpdateParams: [i]
         });

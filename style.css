@@ -2,18 +2,14 @@
 
 body {
     background-color: black;
-    height: 100%;
     overflow: hidden;
 }
 
-.progress {
+.spinner-grow {
     position: absolute;
     top: 50%;
-    left: 30%;
+    left: 50%;
     transform: translate(0%, -50%);
-    width: 40%;
-    margin-top: auto;
-    margin-bottom: auto;
 }
 
 .container {
@@ -31,5 +27,4 @@ body {
     width: 100vw;
     height: 100vh;
     display: block;
-    
 }
