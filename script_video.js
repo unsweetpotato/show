@@ -33,7 +33,7 @@ $(function () {
         document.getElementById(`video${i+1}`).addEventListener('canplay', videoloaded);
         document.getElementById(`video${i+1}`).currentTime = (frame_per_model * i) * time_per_frame;
     }
-
+    videoloaded();
     /*
      * Scroll Animation
      */
