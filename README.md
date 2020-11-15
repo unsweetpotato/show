@@ -1,1 +1,1 @@
-# Unsweetpotato. 짐동.
+# Unsweetpotato, 짐동, Show
