@@ -14,16 +14,18 @@ $(function () {
      * Video Loading
      */
 
-    function videoloaded (event) {
+    function videoloaded(event) {
         progress += 1;
         console.log(progress);
         // if (progress == model_n) {
-            document.body.style.overflow = 'visible';
-            $('.container').css('visibility', 'visible');
-            $('.spinner-grow').css('display', 'none');
-            for (var i = 0; i < model_n; i++) {
+        document.body.style.overflow = 'visible';
+        $('.container').css('visibility', 'visible');
+        $('.spinner-grow').css('display', 'none');
+        for (var i = 0; i < model_n; i++) {
             document.getElementById(`video${i+1}`).pause();
-            }
+            document.getElementById(`video${i+1}`).currentTime = frame_per_model * i * time_per_frame;
+            document.getElementById(`video${model_name+1}`).currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+        }
         // }
 
     }
@@ -35,7 +37,7 @@ $(function () {
             </div>`;
         document.getElementById(`video${i+1}`).addEventListener('canplaythrough', videoloaded);
     }
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         for (var i = 0; i < model_n; i++) {
             document.getElementById(`video${i+1}`).pause();
         }
