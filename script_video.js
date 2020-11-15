@@ -24,13 +24,13 @@ $(function () {
         // }
 
     }
-    // Create scene and canvas
+    // Create scene and video
     for (var i = 0; i < model_n; i++) {
         document.body.innerHTML +=
             `<div id="scene${i+1}" class="container" style="visibility:hidden">
-                <video id="canvas${i+1}" src ="${video_mp4_url}" class="model">
+                <video id="video${i+1}" src ="${video_mp4_url}" class="model">
             </div>`;
-        document.getElementById(`canvas${i+1}`).addEventListener('canplaythrough', videoloaded);
+        document.getElementById(`video${i+1}`).addEventListener('canplay', videoloaded);
     }
 
     /*
@@ -49,7 +49,7 @@ $(function () {
 
     for (var i = 0; i < model_n; i++) {
         currs[i] = {
-            cur_frame: 1
+            cur_frame: 0
         };
 
         // create tween
@@ -64,9 +64,7 @@ $(function () {
             immediateRender: true,
             ease: Linear.easeNone, // show every image the same ammount of time
             onUpdate: function (model_name) {
-                console.log(`canvas${model_name}-${currs[model_name].cur_frame}`);
-                var video = document.getElementById(`canvas${model_name+1}`);
-                video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+                document.getElementById(`video${model_name+1}`).currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
             },
             onUpdateParams: [i]
         });

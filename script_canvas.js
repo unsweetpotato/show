@@ -1,6 +1,5 @@
 $(function () {
     const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
-    const video_ogg_url = 'https://player.vimeo.com/external/479258911.source.ogv?s=4139b3726bbeb296b2bc41e51d905269e67e166d&download=1';
     const time_per_frame = 0.04;
     const per_enter_duration = document.documentElement.clientHeight * 0.5,
         per_center_duration = document.documentElement.clientHeight * 4,
@@ -12,7 +11,7 @@ $(function () {
         wy = window.innerHeight,
         w, h, ox, oy;
 
-    console.log("2020-11-14 hig");
+    console.log("2020-11-14 11-15");
 
     /*
      * Video Loading
@@ -58,7 +57,6 @@ $(function () {
     }
 
     function redraw() {
-        console.log(video.played);
         for (var i = 0; i < model_n; i++) {
             document.getElementById(`canvas${i+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         }
@@ -98,7 +96,6 @@ $(function () {
             immediateRender: true,
             ease: Linear.easeNone, // show every image the same ammount of time
             onUpdate: function (model_name) {
-                console.log(`canvas${model_name}-${currs[model_name].cur_frame}`)
                 video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
                 var ctx = document.getElementById(`canvas${model_name+1}`).getContext('2d');
                 ctx.drawImage(video, ox, oy, w, h);
