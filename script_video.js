@@ -24,6 +24,7 @@ $(function () {
         for (var i = 0; i < model_n; i++) {
             document.getElementById(`video${i+1}`).currentTime = frame_per_model * i * time_per_frame;
             document.getElementById(`video${i+1}`).pause();
+            document.getElementById(`video${i+1}`).removeEventListener('canplaythrough', videoloaded);
         }
         // }
 
