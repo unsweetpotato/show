@@ -15,6 +15,7 @@ $(function () {
      */
 
     function videoloaded (event) {
+        alert("test ! videoloaded");
         progress += 1;
         console.log(progress);
         // if (progress == model_n) {
