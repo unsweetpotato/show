@@ -21,6 +21,9 @@ $(function () {
             document.body.style.overflow = 'visible';
             $('.container').css('visibility', 'visible');
             $('.spinner-grow').css('display', 'none');
+            for (var i = 0; i < model_n; i++) {
+            document.getElementById(`video${i+1}`).pause();
+            }
         // }
 
     }
@@ -28,12 +31,15 @@ $(function () {
     for (var i = 0; i < model_n; i++) {
         document.body.innerHTML +=
             `<div id="scene${i+1}" class="container" style="visibility:hidden">
-                <video id="video${i+1}" src ="${video_mp4_url}" class="model" playsinline muted>
+                <video id="video${i+1}" src ="${video_mp4_url}" class="model" playsinline autoplay muted>
             </div>`;
         document.getElementById(`video${i+1}`).addEventListener('canplaythrough', videoloaded);
-        document.getElementById(`video${i+1}`).pause();
     }
-    videoloaded();
+    window.addEventListener('load', function() {
+        for (var i = 0; i < model_n; i++) {
+            document.getElementById(`video${i+1}`).pause();
+        }
+    });
     /*
      * Scroll Animation
      */
