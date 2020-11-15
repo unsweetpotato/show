@@ -17,7 +17,7 @@ $(function () {
      * Video Loading
      */
     document.body.innerHTML += `
-    <video id="video" style="display:none">
+    <video id="video" style="display:none" playsinline autoplay muted>
         <source src = "${video_mp4_url}" type="video/mp4">
     </video>`;
     var video = document.getElementById('video');
