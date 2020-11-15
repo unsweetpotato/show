@@ -31,6 +31,7 @@ $(function () {
                 <video id="video${i+1}" src ="${video_mp4_url}" class="model" playsinline>
             </div>`;
         document.getElementById(`video${i+1}`).addEventListener('canplay', videoloaded);
+        document.getElementById(`video${i+1}`).currentTime = (frame_per_model * i) * time_per_frame;
     }
 
     /*
