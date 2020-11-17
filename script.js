@@ -23,17 +23,26 @@ var video = document.getElementById('video');
 function videoloaded(event) {
     resizeCanvas();
     document.body.style.overflow = 'visible';
-    $('.container').css('visibility', 'visible');
-    $('.spinner-grow').css('display', 'none');
     video.removeEventListener('canplaythrough', videoloaded);
-    // document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
+
+    function showstarted() {
+        $('.container').css('visibility', 'visible');
+        $('.spinner-grow').css('display', 'none');
+
+        window.addEventListener('resize', resizeCanvas, false);
+        window.addEventListener('resize', redraw, false);
+        document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
+        window.requestAnimationFrame(redraw);
+    }
+    setTimeout(showstarted, 3000);
+
 }
 video.addEventListener('canplaythrough', videoloaded);
 
 // Create scene and canvas
 for (var i = 1; i <= model_n; i++) {
     document.body.innerHTML +=
-    `<div id="scene${i}" class="container" style="visibility:hidden">
+        `<div id="scene${i}" class="container" style="visibility:hidden">
         <canvas id="canvas${i}" class="model">
     </div>`;
 }
@@ -47,7 +56,7 @@ function resizeCanvas() {
         w = wx, h = wx * 1080 / 1920;
         ox = 0, oy = (wy - h) / 2;
     }
-    
+
     for (var i = 0; i < model_n; i++) {
         var canvas = document.getElementById(`canvas${i+1}`);
         canvas.width = wx;
@@ -59,11 +68,8 @@ function redraw() {
     for (var i = 0; i < model_n; i++) {
         document.getElementById(`canvas${i+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
     }
+    window.requestAnimationFrame(redraw);
 }
-
-
-window.addEventListener('resize', resizeCanvas, false);
-window.addEventListener('resize', redraw, false);
 
 /*
  * Scroll Animation
@@ -81,12 +87,17 @@ let currs = new Array(model_n);
 
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
-        cur_frame: 1
-    };
+        cur_frame: 0
+    }
 
     // create tween
     var enter_tween = TweenMax.to(`#scene${i+1}`, 1, {
-        opacity: 1
+        opacity: 1,
+        onUpdate: function (model_name) {
+            video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
+            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+        },
+        onUpdateParams: [i]
     });
 
     var center_tween = TweenMax.to(currs[i], 1, {
@@ -97,14 +108,18 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
-            var ctx = document.getElementById(`canvas${model_name+1}`).getContext('2d');
-            ctx.drawImage(video, ox, oy, w, h);
+            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
 
     var leave_tween = TweenMax.to(`#scene${i+1}`, 1, {
-        opacity: 0
+        opacity: 0,
+        onUpdate: function (model_name) {
+            video.currentTime = ((frame_per_model * model_name) + frame_per_model - 1) * time_per_frame;
+            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+        },
+        onUpdateParams: [i]
     });
 
     // enter scene
