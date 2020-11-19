@@ -1,5 +1,7 @@
 @charset "utf-8";
-
+html, body {
+    margin: 0;
+  }
 body {
     background-color: #d2d2d2;
     overflow: hidden;
@@ -13,18 +15,10 @@ body {
 }
 
 .container {
-    width: 100vw;
-    height: 100vh;
     max-width: 100%;
     max-height: 100%;
     padding-left: 0;
     padding-right: 0;
-    display: flex;
-    opacity: 0;
-}
-
-.model {
-    width: 100vw;
-    height: 100vh;
     display: block;
+    opacity: 0;
 }
