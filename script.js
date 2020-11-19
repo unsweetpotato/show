@@ -16,10 +16,7 @@ let wx = window.innerWidth,
 
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML +=
-    `<canvas id="canvas${i}" class="container" style="visibility:hidden" margin:="unset">
-        
-    </canvas>`;
+    document.body.innerHTML += `<canvas id="canvas${i}" class="container" style="visibility:hidden" margin:="unset">`;
 }
 
 let video = document.getElementById('video');
