@@ -65,7 +65,7 @@ function resizeCanvas() {
 }
 
 function redraw() {
-    for (var i in focused_canvas) {
+    for (var i = 0; i < model_n; i++) {
         document.getElementById(`canvas${i+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
     }
     window.requestAnimationFrame(redraw);
@@ -84,7 +84,6 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
-let focused_canvas = [0, 1];
 
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
@@ -95,7 +94,6 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#scene${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_canvas = [model_name, model_name + 1];
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
             document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
@@ -109,7 +107,6 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_canvas = [model_name];
             video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
             document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
@@ -119,7 +116,6 @@ for (var i = 0; i < model_n; i++) {
     var leave_tween = TweenMax.to(`#scene${i+1}`, 1, {
         opacity: 0,
         onUpdate: function (model_name) {
-            focused_canvas = [model_name-1, model_name];
             video.currentTime = ((frame_per_model * model_name) + frame_per_model - 1) * time_per_frame;
             document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
