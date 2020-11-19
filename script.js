@@ -10,8 +10,8 @@ document.body.innerHTML += `
 const model_n = 12,
     frame_per_model = 250;
 let progress = 0;
-let wx = window.innerWidth,
-    wy = window.innerHeight,
+let wx = parent.window.innerWidth,
+    wy = parent.window.innerHeight,
     w, h, ox, oy;
 
 // Create canvas and canvas
@@ -46,8 +46,8 @@ function videoloaded(event) {
 }
 
 function resizeCanvas() {
-    alert([wx, wy, window.innerWidth, window.innerHeight]);
-    wx = window.innerWidth, wy = window.innerHeight;
+    alert([wx, wy, window.innerWidth, window.innerHeight, parent.window.innerWidth, parent.window.innerHeight]);
+    wx = parent.window.innerWidth, wy = parent.window.innerHeight;
     if (wx / wy >= 1920 / 1080) { //가로가 더 큰 경우라 세로에 맞춘다.
         w = wy * 1920 / 1080, h = wy;
         ox = (wx - w) / 2, oy = 0;
@@ -60,7 +60,6 @@ function resizeCanvas() {
         var canvas = document.getElementById(`canvas${i+1}`);
         canvas.width = wx;
         canvas.height = wy;
-        canvas.margin = "unset";
     }
 }
 
