@@ -134,9 +134,9 @@ for (var i = 0; i < model_n; i++) {
             duration: per_enter_duration,
         })
         .setTween(enter_tween)
-        .addIndicators({
-            name: `enter model ${i+1}`
-        })
+        // .addIndicators({
+        //     name: `enter model ${i+1}`
+        // })
         .addTo(controller);
 
     // center scene
@@ -146,9 +146,9 @@ for (var i = 0; i < model_n; i++) {
         })
         .setPin(`#scene${i+1}`)
         .setTween(center_tween)
-        .addIndicators({
-            name: `center model ${i+1}`
-        })
+        // .addIndicators({
+        //     name: `center model ${i+1}`
+        // })
         .addTo(controller);
 
     // leave scene
@@ -159,8 +159,8 @@ for (var i = 0; i < model_n; i++) {
             duration: per_leave_duration,
         })
         .setTween(leave_tween)
-        .addIndicators({
-            name: `leave model ${i+1}`
-        })
+        // .addIndicators({
+        //     name: `leave model ${i+1}`
+        // })
         .addTo(controller);
 }
