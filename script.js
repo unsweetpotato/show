@@ -10,8 +10,8 @@ document.body.innerHTML += `
 const model_n = 12,
     frame_per_model = 250;
 let progress = 0;
-let wx = parent.document.getElementsByTagName("iframe")[0].width;
-    wy = parent.document.getElementsByTagName("iframe")[0].height;
+let wx = window.innerWidth,
+    wy = window.innerHeight,
     w, h, ox, oy;
 
 // Create canvas and canvas
@@ -46,8 +46,7 @@ function videoloaded(event) {
 }
 
 function resizeCanvas() {
-    alert([wx, wy, window.innerWidth, window.innerHeight, parent.document.getElementsByTagName("iframe")[0].width, parent.document.getElementsByTagName("iframe")[0].height]);
-    wx = parent.document.getElementsByTagName("iframe")[0].width, wy = parent.document.getElementsByTagName("iframe")[0].height;
+    wx = window.innerWidth, wy = window.innerHeight;
     if (wx / wy >= 1920 / 1080) { //가로가 더 큰 경우라 세로에 맞춘다.
         w = wy * 1920 / 1080, h = wy;
         ox = (wx - w) / 2, oy = 0;
