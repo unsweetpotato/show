@@ -1,24 +1,29 @@
+/*
+ * Video Loading
+ */
 const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
-const time_per_frame = 0.04;
-const per_enter_duration = document.documentElement.clientHeight * 0.5,
-    per_center_duration = document.documentElement.clientHeight * 4,
-    per_leave_duration = document.documentElement.clientHeight * 0.5;
+document.body.innerHTML += `
+<video id="video" style="display:none" playsinline autoplay muted autobuffer>
+    <source src = "${video_mp4_url}" type="video/mp4">
+</video>`;
+
 const model_n = 12,
     frame_per_model = 250;
 let progress = 0;
-var wx = window.innerWidth,
+let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 
-/*
- * Video
- */
+// Create scene and canvas
+for (var i = 1; i <= model_n; i++) {
+    document.body.innerHTML +=
+        `<div id="scene${i}" class="container" style="visibility:hidden">
+        <canvas id="canvas${i}" class="model">
+    </div>`;
+}
 
-document.body.innerHTML += `
-<video id="video" style="display:none" playsinline autoplay muted>
-    <source src = "${video_mp4_url}" type="video/mp4">
-</video>`;
-var video = document.getElementById('video');
+let video = document.getElementById('video');
+video.addEventListener('canplaythrough', videoloaded);
 
 function videoloaded(event) {
     resizeCanvas();
@@ -26,8 +31,13 @@ function videoloaded(event) {
     video.removeEventListener('canplaythrough', videoloaded);
 
     function showstarted() {
-        $('.container').css('visibility', 'visible');
-        $('.spinner-grow').css('display', 'none');
+        var containers = document.getElementsByClassName('container');
+        for (var container of containers) {
+            container.style.visibility  = 'visible';
+        }
+        document.getElementById("loading").style.display = 'none';
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('resize', redraw, false);
@@ -36,15 +46,6 @@ function videoloaded(event) {
     }
     setTimeout(showstarted, 3000);
 
-}
-video.addEventListener('canplaythrough', videoloaded);
-
-// Create scene and canvas
-for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML +=
-        `<div id="scene${i}" class="container" style="visibility:hidden">
-        <canvas id="canvas${i}" class="model">
-    </div>`;
 }
 
 function resizeCanvas() {
@@ -65,8 +66,8 @@ function resizeCanvas() {
 }
 
 function redraw() {
-    for (var i in focused_canvas) {
-        document.getElementById(`canvas${i+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+    for (var focusing in focused_canvas) {
+        document.getElementById(`canvas${parseInt(focusing)+1}`).getContext('2d').drawImage(video, ox, oy, w, h);  
     }
     window.requestAnimationFrame(redraw);
 }
@@ -74,6 +75,10 @@ function redraw() {
 /*
  * Scroll Animation
  */
+const time_per_frame = 0.04;
+const per_enter_duration = document.documentElement.clientHeight * 0.5,
+    per_center_duration = document.documentElement.clientHeight * 4,
+    per_leave_duration = document.documentElement.clientHeight * 0.5;
 
 // init controller
 let controller = new ScrollMagic.Controller({
@@ -95,7 +100,7 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#scene${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_canvas = [model_name, model_name + 1];
+            focused_canvas = [model_name, model_name - 1];
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
             document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
@@ -119,7 +124,6 @@ for (var i = 0; i < model_n; i++) {
     var leave_tween = TweenMax.to(`#scene${i+1}`, 1, {
         opacity: 0,
         onUpdate: function (model_name) {
-            focused_canvas = [model_name-1, model_name];
             video.currentTime = ((frame_per_model * model_name) + frame_per_model - 1) * time_per_frame;
             document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
