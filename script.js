@@ -39,7 +39,7 @@ function videoloaded(event) {
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('resize', redraw, false);
         document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
-        window.requestAnimationFrame(redraw);
+        // window.requestAnimationFrame(redraw);
     }
     setTimeout(showstarted, 3000);
 
