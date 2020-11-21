@@ -15,12 +15,14 @@ const model_n = 12,
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
+
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
     document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset">`;
 }
 
-video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
 
 var req = new XMLHttpRequest();
@@ -62,11 +64,11 @@ req.send();
 function resizeCanvas() {
     console.log("resizing");
     wx = window.innerWidth, wy = window.innerHeight;
-    if (wx / wy >= 1920 / 1080) { //가로가 더 큰 경우라 세로에 맞춘다.
-        w = wy * 1920 / 1080, h = wy;
+    if (wx / wy >= ratio) { //가로가 더 큰 경우라 세로에 맞춘다.
+        w = wy * ratio, h = wy;
         ox = (wx - w) / 2, oy = 0;
     } else {
-        w = wx, h = wx * 1080 / 1920;
+        w = wx, h = wx / ratio;
         ox = 0, oy = (wy - h) / 2;
     }
 
