@@ -1,3 +1,5 @@
+const mp4_fat = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1',
+    mp4_tall = 'https://player.vimeo.com/external/482023415.source.mp4?s=7bdd36504d7b32e127a0959e1d171e52fccd8c70&download=1';
 /*
  * Video Loading
  */
@@ -10,12 +12,15 @@ document.body.style.overflow = "hidden";
 const time_per_frame = 0.04;
 const model_n = 12,
     frame_per_model = 250;
-
+let wx = window.innerWidth,
+    wy = window.innerHeight,
+    w, h, ox, oy;
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
     document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset">`;
 }
-const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
+
+video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let video = document.getElementById('video');
 
 var req = new XMLHttpRequest();
@@ -51,9 +56,6 @@ req.onload = function () {
 req.send();
 
 
-let wx = window.innerWidth,
-    wy = window.innerHeight,
-    w, h, ox, oy;
 
 
 
