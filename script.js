@@ -1,51 +1,64 @@
 /*
  * Video Loading
  */
-const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
-document.body.innerHTML += `
-<video id="video" style="display:none" playsinline autoplay muted autobuffer>
-    <source src = "${video_mp4_url}" type="video/mp4">
-</video>`;
+function scrollTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
 
+document.body.style.overflow = "hidden";
+const time_per_frame = 0.04;
 const model_n = 12,
     frame_per_model = 250;
-let progress = 0;
+
+// Create canvas and canvas
+for (var i = 1; i <= model_n; i++) {
+    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset">`;
+}
+const video_mp4_url = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1';
+let video = document.getElementById('video');
+
+var req = new XMLHttpRequest();
+req.addEventListener("progress", function (evt) {
+    if (evt.lengthComputable) {
+        scrollTop();
+        var percentComplete = evt.loaded / evt.total;
+        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
+        document.getElementById('loading_logo').style.opacity = percentComplete;
+
+        if (percentComplete >= 0.99) {
+            document.body.style.overflow = 'visible';
+            document.getElementById("loading_logo").style.display = 'none';
+            document.getElementById("loading_text").style.display = 'none';
+
+            window.addEventListener('resize', resizeCanvas, false);
+            window.addEventListener('resize', redraw, false);
+            resizeCanvas();
+            document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
+            window.requestAnimationFrame(redraw);
+        }
+    }
+}, true);
+req.open('GET', video_mp4_url, true);
+req.responseType = 'blob';
+req.onload = function () {
+    if (this.status === 200) {
+        var videoBlob = this.response;
+        var vid = URL.createObjectURL(videoBlob);
+        video.src = vid;
+    }
+}
+req.send();
+
+
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 
-// Create canvas and canvas
-for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<canvas id="canvas${i}" class="container" style="visibility:hidden" margin:="unset">`;
-}
 
-let video = document.getElementById('video');
-video.addEventListener('canplaythrough', videoloaded);
-
-function videoloaded(event) {
-    resizeCanvas();
-    document.body.style.overflow = 'visible';
-    video.removeEventListener('canplaythrough', videoloaded);
-
-    function showstarted() {
-        var containers = document.getElementsByClassName('container');
-        for (var container of containers) {
-            container.style.visibility  = 'visible';
-        }
-        document.getElementById("loading").style.display = 'none';
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-        window.addEventListener('resize', resizeCanvas, false);
-        window.addEventListener('resize', redraw, false);
-        document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
-        // window.requestAnimationFrame(redraw);
-    }
-    setTimeout(showstarted, 3000);
-
-}
 
 function resizeCanvas() {
+    console.log("resizing");
     wx = window.innerWidth, wy = window.innerHeight;
     if (wx / wy >= 1920 / 1080) { //가로가 더 큰 경우라 세로에 맞춘다.
         w = wy * 1920 / 1080, h = wy;
@@ -64,7 +77,7 @@ function resizeCanvas() {
 
 function redraw() {
     for (var focusing in focused_canvas) {
-        document.getElementById(`canvas${parseInt(focusing)+1}`).getContext('2d').drawImage(video, ox, oy, w, h);  
+        document.getElementById(`canvas${parseInt(focusing)+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
     }
     window.requestAnimationFrame(redraw);
 }
@@ -72,7 +85,6 @@ function redraw() {
 /*
  * Scroll Animation
  */
-const time_per_frame = 0.04;
 const per_enter_duration = document.documentElement.clientHeight * 0.5,
     per_center_duration = document.documentElement.clientHeight * 4,
     per_leave_duration = document.documentElement.clientHeight * 0.5;

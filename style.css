@@ -3,17 +3,33 @@
 html,
 body {
     margin: 0;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    /* -ms-overflow-style: none; */
+    /* scrollbar-width: none; */
 }
 
 body::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
 }
 
 body {
     background-color: #d2d2d2;
-    overflow: hidden;
+    /* overflow: hidden; */
+
+}
+
+.logo_image {
+    /* display: block; */
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.logo_text {
+    text-align: center;
 }
 
 .container {
