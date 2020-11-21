@@ -135,9 +135,6 @@ for (var i = 0; i < model_n; i++) {
             duration: per_enter_duration,
         })
         .setTween(enter_tween)
-        .addIndicators({
-            name: `enter model ${i+1}`
-        })
         .addTo(controller);
 
     // center canvas
@@ -147,9 +144,6 @@ for (var i = 0; i < model_n; i++) {
         })
         .setPin(`#canvas${i+1}`)
         .setTween(center_tween)
-        .addIndicators({
-            name: `center model ${i+1}`
-        })
         .addTo(controller);
 
     // leave canvas
@@ -160,8 +154,5 @@ for (var i = 0; i < model_n; i++) {
             duration: per_leave_duration,
         })
         .setTween(leave_tween)
-        .addIndicators({
-            name: `leave model ${i+1}`
-        })
         .addTo(controller);
 }
