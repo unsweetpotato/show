@@ -56,13 +56,6 @@ req.onload = function () {
     }
 }
 req.onerror = function () {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", 'https://hooks.slack.com/services/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', true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    var payload = {
-        "text": `error ${video_mp4_url}`,
-    };
-    xhr.send( JSON.stringify(payload));
 }
 req.send();
 
