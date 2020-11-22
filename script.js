@@ -1,14 +1,6 @@
-const mp4_fat = 'https://player.vimeo.com/external/479258911.hd.mp4?s=26c17afcd9eca26a6f57598501fe8b3b6bb23f78&profile_id=175&download=1',
+const mp4_fat = 'https://player.vimeo.com/external/482252434.source.mp4?s=4a243ed1863bc9b17ba67ff130bfc86de91e218c&download=1',
     mp4_tall = 'https://player.vimeo.com/external/482023415.source.mp4?s=7bdd36504d7b32e127a0959e1d171e52fccd8c70&download=1';
-/*
- * Video Loading
- */
-function scrollTop() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
 
-document.body.style.overflow = "hidden";
 const time_per_frame = 0.04;
 const model_n = 12,
     frame_per_model = 250;
@@ -16,24 +8,32 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 
+function scrollTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+scrollTop();
+document.body.style.overflow = "hidden";
+
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset">`;
+    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
 }
 
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
 
+// Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
+    scrollTop();
     if (evt.lengthComputable) {
-        scrollTop();
         var percentComplete = evt.loaded / evt.total;
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
         document.getElementById('loading_logo').style.opacity = percentComplete;
 
-        if (percentComplete >= 0.99) {
+        if (percentComplete >= 1) {
             document.body.style.overflow = 'visible';
             document.getElementById("loading_logo").style.display = 'none';
             document.getElementById("loading_text").style.display = 'none';
@@ -41,7 +41,7 @@ req.addEventListener("progress", function (evt) {
             window.addEventListener('resize', resizeCanvas, false);
             window.addEventListener('resize', redraw, false);
             resizeCanvas();
-            document.getElementById(`canvas1`).getContext('2d').drawImage(video, ox, oy, w, h);
+
             window.requestAnimationFrame(redraw);
         }
     }
@@ -55,11 +55,16 @@ req.onload = function () {
         video.src = vid;
     }
 }
+req.onerror = function () {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", 'https://hooks.slack.com/services/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', true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var payload = {
+        "text": `error ${video_mp4_url}`,
+    };
+    xhr.send( JSON.stringify(payload));
+}
 req.send();
-
-
-
-
 
 function resizeCanvas() {
     console.log("resizing");
@@ -80,7 +85,7 @@ function resizeCanvas() {
 }
 
 function redraw() {
-    for (var focusing in focused_canvas) {
+    for (var focusing = 0; focusing < model_n; focusing++) {
         document.getElementById(`canvas${parseInt(focusing)+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
     }
     window.requestAnimationFrame(redraw);
@@ -115,7 +120,7 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = [model_name, model_name - 1];
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
-            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
@@ -129,7 +134,7 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = [model_name];
             video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
-            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
@@ -138,7 +143,7 @@ for (var i = 0; i < model_n; i++) {
         opacity: 0,
         onUpdate: function (model_name) {
             video.currentTime = ((frame_per_model * model_name) + frame_per_model - 1) * time_per_frame;
-            document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
+            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
