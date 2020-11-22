@@ -1,5 +1,5 @@
 const mp4_fat = 'https://player.vimeo.com/external/482252434.source.mp4?s=4a243ed1863bc9b17ba67ff130bfc86de91e218c&download=1',
-    mp4_tall = 'https://player.vimeo.com/external/482023415.source.mp4?s=7bdd36504d7b32e127a0959e1d171e52fccd8c70&download=1';
+    mp4_tall = 'https://player.vimeo.com/external/482273605.source.mp4?s=150d11504058052d747333ecaac423c7026856af&download=1';
 
 const time_per_frame = 0.04;
 const model_n = 12,
@@ -59,7 +59,6 @@ req.onerror = function () {
 req.send();
 
 function resize() {
-    console.log("resizing");
     wx = window.innerWidth, wy = window.innerHeight;
     if (wx / wy >= ratio) { //가로가 더 큰 경우라 세로에 맞춘다.
         w = wy * ratio, h = wy;
