@@ -1,4 +1,4 @@
-const mp4_fat = 'https://player.vimeo.com/external/479247194.source.mp4?s=8311637ec97a5f1170acfe5cbb05ee8762d5355d&download=1',
+const mp4_fat = 'https://player.vimeo.com/external/479258911.hd.mp4?s=26c17afcd9eca26a6f57598501fe8b3b6bb23f78&profile_id=175&download=1',
     mp4_tall = 'https://player.vimeo.com/external/482023415.source.mp4?s=7bdd36504d7b32e127a0959e1d171e52fccd8c70&download=1';
 /*
  * Video Loading
