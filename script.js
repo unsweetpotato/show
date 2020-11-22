@@ -23,7 +23,7 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-
+let vw = 1980, vh = 1050;
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -32,16 +32,15 @@ req.addEventListener("progress", function (evt) {
         var percentComplete = evt.loaded / evt.total;
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
         document.getElementById('loading_logo').style.opacity = percentComplete;
-
+        vw = video.videoWidth, vh = video.videoHeight;
         if (percentComplete >= 1) {
+            
             document.body.style.overflow = 'visible';
             document.getElementById("loading_logo").style.display = 'none';
             document.getElementById("loading_text").style.display = 'none';
 
-            window.addEventListener('resize', resizeCanvas, false);
-            window.addEventListener('resize', redraw, false);
-            resizeCanvas();
-
+            window.addEventListener('resize', resize, false);
+            resize();
             window.requestAnimationFrame(redraw);
         }
     }
@@ -59,7 +58,7 @@ req.onerror = function () {
 }
 req.send();
 
-function resizeCanvas() {
+function resize() {
     console.log("resizing");
     wx = window.innerWidth, wy = window.innerHeight;
     if (wx / wy >= ratio) { //가로가 더 큰 경우라 세로에 맞춘다.
@@ -69,18 +68,23 @@ function resizeCanvas() {
         w = wx, h = wx / ratio;
         ox = 0, oy = (wy - h) / 2;
     }
+    console.log([vw, vh, ox, oy, w, h]);
+    resizeCanvas();
+    redraw();
+}
 
-    for (var i = 0; i < model_n; i++) {
-        var canvas = document.getElementById(`canvas${i+1}`);
+function resizeCanvas() {
+    for (var i = 1; i <= model_n; i++) {
+        var canvas = document.getElementById(`canvas${i}`);
         canvas.width = wx;
         canvas.height = wy;
+        canvas.style.margin = 0;
     }
 }
 
 function redraw() {
-    for (var focusing = 0; focusing < model_n; focusing++) {
-        document.getElementById(`canvas${parseInt(focusing)+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
-    }
+    // console.log([ox, oy, w, h]);
+    document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h)
     window.requestAnimationFrame(redraw);
 }
 
@@ -100,7 +104,7 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
-let focused_canvas = [0, 1];
+let focused_canvas = 1;
 
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
@@ -111,9 +115,8 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_canvas = [model_name, model_name - 1];
+            focused_canvas = model_name + 1;
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
-            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
@@ -125,19 +128,14 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_canvas = [model_name];
+            focused_canvas = model_name + 1;
             video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
-            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
     });
 
     var leave_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 0,
-        onUpdate: function (model_name) {
-            video.currentTime = ((frame_per_model * model_name) + frame_per_model - 1) * time_per_frame;
-            // document.getElementById(`canvas${model_name+1}`).getContext('2d').drawImage(video, ox, oy, w, h);
-        },
         onUpdateParams: [i]
     });
 
