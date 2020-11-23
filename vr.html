@@ -3,28 +3,35 @@
 
 <head>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.js"></script>
-    <script src="https://storage.googleapis.com/vrview/2.0/build/vrview.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.4.1/dist/video-js.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-vr@1.5.0/dist/videojs-vr.css">
+    <script src="https://cdn.jsdelivr.net/npm/video.js@7.4.1/dist/video.js"
+        integrity="sha256-vrHnet1gn0rfMfcNSTaMvp7bW1MU+hBXCuyPjfdxXhc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-vr@1.5.0/dist/videojs-vr.js"
+        integrity="sha256-aVLbKVeaTsLwmKYjya1a4xZGhAaG7j3Z4Ll7SkzSa6A=" crossorigin="anonymous"></script>
 
 </head>
-<!-- https://player.vimeo.com/external/481169583.source.mp4?s=47042f73ae653431ac7c4f201f6bd3c6a48c97b9&download=1 -->
 
 <body>
-    <div id='vrview'></div>
+    <video width="960" height="540" id="videojs-vr-player" class="video-js vjs-default-skin" controls playsinline
+        crossorigin="anonymous">
+        <source
+            src="https://player.vimeo.com/external/481169583.source.mp4?s=47042f73ae653431ac7c4f201f6bd3c6a48c97b9&download=1"
+            type="video/mp4" crossorigin="anonymous">
+    </video>
     <script>
-        window.addEventListener('load', onVrViewLoad);
+        (function (window, videojs) {
+            var player = window.player = videojs('videojs-vr-player');
+            player.mediainfo = player.mediainfo || {};
+            player.mediainfo.projection = '360';
 
-        function onVrViewLoad() {
-            // Selector '#vrview' finds element with id 'vrview'.
-            var vrView = new VRView.Player('#vrview', {
-                width: '100%',
-                height: 600,
-                video: 'https://player.vimeo.com/external/481169583.source.mp4?s=47042f73ae653431ac7c4f201f6bd3c6a48c97b9&download=1',
+            // AUTO is the default and looks at mediainfo
+            var vr = window.vr = player.vr({
+                projection: 'AUTO',
+                debug: true,
+                forceCardboard: false
             });
-        }
+        }(window, window.videojs));
     </script>
 </body>
 
