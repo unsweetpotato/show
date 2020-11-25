@@ -52494,24 +52494,11 @@
       /* this is a workaround since threejs uses try catch */
 
       webglContext.texImage2D = function () {
-        try {
           for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
           }
 
           return oldTexImage2D.apply(webglContext, args);
-        } catch (e) {
-          _this4.reset();
-
-          _this4.player_.pause();
-
-          _this4.triggerError_({
-            code: 'web-vr-hls-cors-not-supported',
-            dismiss: false
-          });
-
-          throw new Error(e);
-        }
       };
 
       this.renderer.setSize(this.player_.currentWidth(), this.player_.currentHeight(), false);
