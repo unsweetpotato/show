@@ -1,7 +1,7 @@
 var mp4_fat = document.currentScript.getAttribute('mp4_fat');
 var mp4_tall = document.currentScript.getAttribute('mp4_tall');
 var model_n = document.currentScript.getAttribute('model_n');
-
+var currentTime = 0;
 const time_per_frame = 0.04,
     frame_per_model = 250;
 let wx = window.innerWidth,
@@ -83,9 +83,8 @@ function resizeCanvas() {
 }
 
 function redraw() {
-    // console.log([ox, oy, w, h]);
+    video.currentTime = currentTime;
     document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h);
-    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
@@ -117,7 +116,7 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             focused_canvas = model_name + 1;
-            video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
+            currentTime = ((frame_per_model * model_name)) * time_per_frame;
         },
         onUpdateParams: [i]
     });
@@ -130,7 +129,8 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             focused_canvas = model_name + 1;
-            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+            currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+            
         },
         onUpdateParams: [i]
     });
