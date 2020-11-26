@@ -32,7 +32,7 @@ req.addEventListener("progress", function (evt) {
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
-        document.getElementById('loading_logo').style.opacity = percentComplete;
+        // document.getElementById('loading_logo').style.opacity = percentComplete;
         vw = video.videoWidth, vh = video.videoHeight;
         if (percentComplete >= 1) {
 
@@ -85,6 +85,7 @@ function resizeCanvas() {
 function redraw() {
     // console.log([ox, oy, w, h]);
     document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h);
+    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
