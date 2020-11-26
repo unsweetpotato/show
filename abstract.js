@@ -1,4 +1,4 @@
-const mp4_fat = 'https://player.vimeo.com/external/483898268.source.mp4?s=a0b08149193794d93feea49b16f59fa8fff55627&download=1',
+const mp4_fat = 'https://player.vimeo.com/external/483901608.source.mp4?s=bebf6649a21ae7e99e5414ff9c7f499e2bf1cea6&download=1',
     mp4_tall = 'https://player.vimeo.com/external/482273605.source.mp4?s=150d11504058052d747333ecaac423c7026856af&download=1';
 
 const time_per_frame = 0.04;
