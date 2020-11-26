@@ -31,7 +31,7 @@ req.addEventListener("progress", function (evt) {
     scrollTop();
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
-        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
+        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% LOADING`;
         // document.getElementById('loading_logo').style.opacity = percentComplete;
         vw = video.videoWidth, vh = video.videoHeight;
         if (percentComplete >= 1) {

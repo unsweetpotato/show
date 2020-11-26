@@ -1,4 +1,5 @@
 @charset "utf-8";
+/* @import url(//fonts.googleapis.com/earlyaccess/notosanskr.css); */
 
 html,
 body {
@@ -18,18 +19,19 @@ body {
 }
 
 .logo_image {
-    /* display: block; */
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 20%;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    opacity: 1;
-    mix-blend-mode: difference;
+    /* opacity: 0; */
 }
 
 .logo_text {
+    position: absolute;
+    width: 100%;
+    font-weight: 500;
+    top: 65%;
     text-align: center;
 }
 
