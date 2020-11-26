@@ -32,9 +32,9 @@ req.addEventListener("progress", function (evt) {
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
         var downloaed = parseInt(evt.loaded / 1024 / 1024);
-        var total = parseInt(evt.total /1024 / 1024); 
+        var total = parseInt(evt.total / 1024 / 1024);
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
-        
+
         if (percentComplete >= 1) {
             loading_end();
         }
@@ -122,6 +122,10 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
+            var cnvs = documnet.getElementById(`canvas${model_name}`);
+            var ctx = cnvs.getContext('2d');
+            ctx.clearRect(0, 0, cnvs.width, cnvs.height);
+            ctx.beginPath();
             focused_canvas = model_name + 1;
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
         },
@@ -143,7 +147,6 @@ for (var i = 0; i < model_n; i++) {
 
     var leave_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 0,
-        onUpdateParams: [i]
     });
 
     // enter canvas
