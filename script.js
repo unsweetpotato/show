@@ -1,9 +1,9 @@
-const mp4_fat = 'https://player.vimeo.com/external/483901608.source.mp4?s=bebf6649a21ae7e99e5414ff9c7f499e2bf1cea6&download=1',
-    mp4_tall = 'https://player.vimeo.com/external/482273605.source.mp4?s=150d11504058052d747333ecaac423c7026856af&download=1';
+var mp4_fat  =document.currentScript.getAttribute('mp4_fat');
+var mp4_tall  =document.currentScript.getAttribute('mp4_tall');
+var model_n  =document.currentScript.getAttribute('model_n');
 
-const time_per_frame = 0.04;
-const model_n = 12,
-    frame_per_model = 250;
+const time_per_frame = 0.04,
+frame_per_model = 250;
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
@@ -68,8 +68,10 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
     console.log([vw, vh, ox, oy, w, h]);
+    
     resizeCanvas();
     redraw();
+    video.pause();
 }
 
 function resizeCanvas() {
