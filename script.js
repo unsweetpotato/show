@@ -53,6 +53,7 @@ req.onerror = function () {}
 req.send();
 
 function loading_end() {
+    video.src = video_mp4_url;
     vw = video.videoWidth, vh = video.videoHeight;
     document.body.style.overflow = 'visible';
     document.getElementById("loading_logo").style.display = 'none';
