@@ -123,7 +123,7 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             if (model_name >= 1) {
-                var cnvs = documnet.getElementById(`canvas${model_name}`);
+                var cnvs = document.getElementById(`canvas${model_name}`);
                 var ctx = cnvs.getContext('2d');
                 ctx.clearRect(0, 0, cnvs.width, cnvs.height);
                 ctx.beginPath();
