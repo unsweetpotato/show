@@ -85,7 +85,6 @@ function resizeCanvas() {
 function redraw() {
     // console.log([ox, oy, w, h]);
     document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h);
-    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
