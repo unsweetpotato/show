@@ -31,18 +31,13 @@ req.addEventListener("progress", function (evt) {
     scrollTop();
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
-        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
+        var downloaed = parseInt(evt.loaded / 1024 / 1024);
+        var total = parseInt(evt.total /1024 / 1024); 
+        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total} MB`;
         document.getElementById('loading_logo').style.opacity = percentComplete;
-        vw = video.videoWidth, vh = video.videoHeight;
+        
         if (percentComplete >= 1) {
-
-            document.body.style.overflow = 'visible';
-            document.getElementById("loading_logo").style.display = 'none';
-            document.getElementById("loading_text").style.display = 'none';
-
-            window.addEventListener('resize', resize, false);
-            resize();
-            window.requestAnimationFrame(redraw);
+            loading_end();
         }
     }
 }, true);
@@ -57,6 +52,17 @@ req.onload = function () {
 }
 req.onerror = function () {}
 req.send();
+
+function loading_end() {
+    vw = video.videoWidth, vh = video.videoHeight;
+    document.body.style.overflow = 'visible';
+    document.getElementById("loading_logo").style.display = 'none';
+    document.getElementById("loading_text").style.display = 'none';
+
+    window.addEventListener('resize', resize, false);
+    resize();
+    window.requestAnimationFrame(redraw);
+}
 
 function resize() {
     wx = window.innerWidth, wy = window.innerHeight;
@@ -85,6 +91,7 @@ function resizeCanvas() {
 function redraw() {
     // console.log([ox, oy, w, h]);
     document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h)
+    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
