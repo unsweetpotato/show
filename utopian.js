@@ -68,9 +68,10 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
     console.log([vw, vh, ox, oy, w, h]);
-    video.pause();
+    
     resizeCanvas();
     redraw();
+    video.pause();
 }
 
 function resizeCanvas() {
