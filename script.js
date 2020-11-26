@@ -33,8 +33,7 @@ req.addEventListener("progress", function (evt) {
         var percentComplete = evt.loaded / evt.total;
         var downloaed = parseInt(evt.loaded / 1024 / 1024);
         var total = parseInt(evt.total /1024 / 1024); 
-        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total} MB`;
-        document.getElementById('loading_logo').style.opacity = percentComplete;
+        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
         
         if (percentComplete >= 1) {
             loading_end();
