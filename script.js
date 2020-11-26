@@ -23,8 +23,7 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-let vw = 1980,
-    vh = 1050;
+
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -49,15 +48,12 @@ req.onload = function () {
         video.src = vid;
     }
 }
-req.onerror = function () {}
 req.send();
 
 function loading_end() {
-    video.src = video_mp4_url;
-    vw = video.videoWidth, vh = video.videoHeight;
     document.body.style.overflow = 'visible';
-    document.getElementById("loading_logo").style.display = 'none';
-    document.getElementById("loading_text").style.display = 'none';
+    document.getElementById('loading_logo').style.display = 'none';
+    document.getElementById('loading_text').style.display = 'none';
 
     window.addEventListener('resize', resize, false);
     resize();
@@ -73,13 +69,7 @@ function resize() {
         w = wx, h = wx / ratio;
         ox = 0, oy = (wy - h) / 2;
     }
-    console.log([vw, vh, ox, oy, w, h]);
 
-    resizeCanvas();
-    redraw();
-}
-
-function resizeCanvas() {
     for (var i = 1; i <= model_n; i++) {
         var canvas = document.getElementById(`canvas${i}`);
         canvas.width = wx;
@@ -89,8 +79,7 @@ function resizeCanvas() {
 }
 
 function redraw() {
-    // console.log([ox, oy, w, h]);
-    document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h)
+    focused_canvas.drawImage(video, ox, oy, w, h);
     video.pause();
     window.requestAnimationFrame(redraw);
 }
@@ -111,7 +100,7 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
-let focused_canvas = 1;
+let focused_canvas = document.getElementById(`canvas1`).getContext('2d');
 
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
@@ -122,14 +111,7 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            if (model_name >= 1) {
-                var cnvs = document.getElementById(`canvas${model_name}`);
-                var ctx = cnvs.getContext('2d');
-                ctx.clearRect(0, 0, cnvs.width, cnvs.height);
-                ctx.beginPath();
-            }
-
-            focused_canvas = model_name + 1;
+            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
         },
         onUpdateParams: [i]
@@ -142,7 +124,7 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_canvas = model_name + 1;
+            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
         },
         onUpdateParams: [i]
