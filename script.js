@@ -1,9 +1,9 @@
-var mp4_fat  =document.currentScript.getAttribute('mp4_fat');
-var mp4_tall  =document.currentScript.getAttribute('mp4_tall');
-var model_n  =document.currentScript.getAttribute('model_n');
+var mp4_fat = document.currentScript.getAttribute('mp4_fat');
+var mp4_tall = document.currentScript.getAttribute('mp4_tall');
+var model_n = document.currentScript.getAttribute('model_n');
 
 const time_per_frame = 0.04,
-frame_per_model = 250;
+    frame_per_model = 250;
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
@@ -23,7 +23,8 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-let vw = 1980, vh = 1050;
+let vw = 1980,
+    vh = 1050;
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -34,7 +35,7 @@ req.addEventListener("progress", function (evt) {
         document.getElementById('loading_logo').style.opacity = percentComplete;
         vw = video.videoWidth, vh = video.videoHeight;
         if (percentComplete >= 1) {
-            
+
             document.body.style.overflow = 'visible';
             document.getElementById("loading_logo").style.display = 'none';
             document.getElementById("loading_text").style.display = 'none';
@@ -54,8 +55,7 @@ req.onload = function () {
         video.src = vid;
     }
 }
-req.onerror = function () {
-}
+req.onerror = function () {}
 req.send();
 
 function resize() {
@@ -68,10 +68,9 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
     console.log([vw, vh, ox, oy, w, h]);
-    
+
     resizeCanvas();
     redraw();
-    video.pause();
 }
 
 function resizeCanvas() {
@@ -85,7 +84,8 @@ function resizeCanvas() {
 
 function redraw() {
     // console.log([ox, oy, w, h]);
-    document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h)
+    document.getElementById(`canvas${focused_canvas}`).getContext('2d').drawImage(video, ox, oy, w, h);
+    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
