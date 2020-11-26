@@ -71,7 +71,6 @@ function resize() {
 
     resizeCanvas();
     redraw();
-    video.pause();
 }
 
 function resizeCanvas() {
