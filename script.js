@@ -25,10 +25,8 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-document.body.innerHTML += `<video id="hidden_video" style="display:none" src = "${video_mp4_url}" crossorigin="anonymous" playsinline loop muted></video>`;
-let hidden_video = document.getElementById('hidden_video');
-hidden_video.playbackRate = 10;
-hidden_video.play();
+video.playbackRate = 10; 
+video.play();
 
 // Video Loading
 var req = new XMLHttpRequest();
@@ -58,8 +56,6 @@ req.send();
 
 function loading_end() {
     resize();
-    video.playbackRate = 10; 
-    video.play();
 
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
