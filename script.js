@@ -117,7 +117,7 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
+            video.currentTime = ((frame_per_model * model_name)) * time_per_frame + 40;
             hidden_context.drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
@@ -131,7 +131,7 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame + 40;
             hidden_context.drawImage(video, ox, oy, w, h);
         },
         onUpdateParams: [i]
