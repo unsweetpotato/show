@@ -15,13 +15,18 @@ function scrollTop() {
 
 scrollTop();
 document.body.style.overflow = "hidden";
-let video_array = new Array(model_n);
+
+
 // Create canvas and canvas
-for (var i = 1; i <= model_n; i++) {
+for (var i = 0; i < model_n; i++) {
     document.body.innerHTML += `
-    <video id="video${i}" style="display:none" crossorigin="anonymous" preload="auto" playsinline autoplay muted></video>
-    <canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
-    video_array[i-1] = document.getElementById(`video${i}`);
+    <video id="video${i+1}" class="container" margin:="unset" crossorigin="anonymous" preload="auto" playsinline autoplay muted></video>`;
+    
+}
+
+let video_array = new Array(model_n);
+for (var i = 0 ; i < model_n; i++) {
+    video_array[i] = document.getElementById(`video${i+1}`);
 }
 
 
@@ -79,17 +84,15 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
 
-    for (var i = 1; i <= model_n; i++) {
-        var canvas = document.getElementById(`canvas${i}`);
-        canvas.width = wx;
-        canvas.height = wy;
-        canvas.style.margin = 0;
+    for (var i = 0; i < model_n; i++) {
+        video_array[i].width = wx;
+        video_array[i].height = wy;
+        video_array[i].style.margin = 0;
     }
 }
 
 function redraw() {
-    focused_canvas.drawImage(video_array[focusing - 1], ox, oy, w, h);
-    video_array[focusing - 1].pause();
+    video_array[focusing-1].pause();
     window.requestAnimationFrame(redraw);
 }
 
@@ -109,20 +112,17 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
-let focused_canvas = document.getElementById(`canvas1`).getContext('2d');
-let focusing = 1;
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
         cur_frame: 0
     }
 
     // create tween
-    var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
+    var enter_tween = TweenMax.to(`#video${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             focusing = model_name + 1;
-            video_array[focusing].currentTime = frame_per_model * model_name * time_per_frame;
+            video_array[model_name].currentTime = frame_per_model * model_name * time_per_frame;
         },
         onUpdateParams: [i]
     });
@@ -134,20 +134,19 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             focusing = model_name + 1;
-            video_array[focusing - 1].currentTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
+            video_array[model_name].currentTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
         },
         onUpdateParams: [i]
     });
 
-    var leave_tween = TweenMax.to(`#canvas${i+1}`, 1, {
+    var leave_tween = TweenMax.to(`#video${i+1}`, 1, {
         opacity: 0,
     });
 
     // enter canvas
     var enter_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             triggerHook: "onEnter",
             offset: -per_enter_duration,
             duration: per_enter_duration,
@@ -157,16 +156,16 @@ for (var i = 0; i < model_n; i++) {
 
     // center canvas
     var center_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             duration: per_center_duration,
         })
-        .setPin(`#canvas${i+1}`)
+        .setPin(`#video${i+1}`)
         .setTween(center_tween)
         .addTo(controller);
 
     // leave canvas
     var leave_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             triggerHook: "onLeave",
             offset: per_center_duration,
             duration: per_leave_duration,

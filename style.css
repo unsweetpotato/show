@@ -3,13 +3,9 @@
 html,
 body {
     margin: 0;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+
 }
 
-body::-webkit-scrollbar {
-    display: none;
-}
 
 body {
     background-color: #dddddd;
@@ -35,5 +31,5 @@ body {
     display: block;
     width:100vw;
     height:100vh;
-    opacity: 0;
+    /* opacity: 0; */
 }
