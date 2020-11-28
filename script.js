@@ -24,7 +24,7 @@ document.body.style.overflow = "hidden";
 // Create canvas and canvas
 for (var i = 0; i < model_n; i++) {
     document.body.innerHTML += `
-    <video id="video${i+1}" class="container" margin:="unset" crossorigin="anonymous" preload="auto" playsinline autoplay muted></video>`;
+    <video id="video${i+1}" class="container" ></video>`;
     
 }
 
