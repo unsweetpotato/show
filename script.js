@@ -25,6 +25,7 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
+let curTime;
 video.defaultPlaybackRate  = 10.0; 
 video.play();
 // Video Loading
@@ -116,7 +117,8 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
+            curTime = frame_per_model * model_name * time_per_frame;
+            video.currentTime = curTime.toPrecision(5);
         },
         onUpdateParams: [i]
     });
@@ -129,7 +131,8 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
+            curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
+            video.currentTime = curTime.toPrecision(5);
         },
         onUpdateParams: [i]
     });
