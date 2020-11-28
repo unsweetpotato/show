@@ -82,10 +82,10 @@ function resize() {
         canvas.style.margin = 0;
     }
 }
-video.playbackRate = 10;
+
 function redraw() {
     focused_canvas.drawImage(video, ox, oy, w, h);
-    video.pause();
+    // video.pause();
     window.requestAnimationFrame(redraw);
 }
 
