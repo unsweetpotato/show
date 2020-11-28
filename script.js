@@ -7,7 +7,11 @@ const time_per_frame = 0.04,
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
-
+    let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+    let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
+    //let video = document.getElementById('video');
+    let curTime;
+    
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -30,10 +34,6 @@ for (var i = 0 ; i < model_n; i++) {
 }
 
 
-let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
-let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-//let video = document.getElementById('video');
-let curTime;
 
 // Video Loading
 var req = new XMLHttpRequest();
@@ -65,7 +65,9 @@ req.send();
 
 function loading_end() {
     resize();
-    
+    for (var i = 0; i < model_n; i++) {
+        video_array[i].currentTime = i * 10;
+    }
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
