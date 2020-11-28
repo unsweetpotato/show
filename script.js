@@ -66,7 +66,7 @@ req.send();
 function loading_end() {
     resize();
     for (var i = 0; i < model_n; i++) {
-        video_array[i].currentTime = i * 10;
+        video_array[i].currentTime = i * 10 + 5;
     }
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
