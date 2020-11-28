@@ -28,7 +28,7 @@ let hidden_context = hidden_canvas.getContext('2d');
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-
+video.playbackRate = 10;
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
