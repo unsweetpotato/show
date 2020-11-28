@@ -25,7 +25,8 @@ for (var i = 1; i <= model_n; i++) {
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-
+video.defaultPlaybackRate  = 10.0; 
+video.play();
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -54,8 +55,6 @@ req.send();
 
 function loading_end() {
     resize();
-    video.playbackRate = 10; 
-    video.play();
     
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
