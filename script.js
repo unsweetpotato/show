@@ -15,19 +15,21 @@ function scrollTop() {
 
 scrollTop();
 document.body.style.overflow = "hidden";
-
+let video_array = new Array(model_n);
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
+    document.body.innerHTML += `
+    <video id="video${i}" style="display:none" crossorigin="anonymous" preload="auto" playsinline autoplay muted></video>
+    <canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
+    video_array[i-1] = document.getElementById(`video${i}`);
 }
 
 
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-let video = document.getElementById('video');
+//let video = document.getElementById('video');
 let curTime;
-video.defaultPlaybackRate  = 10.0; 
-video.play();
+
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -49,7 +51,9 @@ req.onload = function () {
     if (this.status === 200) {
         var videoBlob = this.response;
         var vid = URL.createObjectURL(videoBlob);
-        video.src = vid;
+        for (var i = 0; i < model_n; i++) {
+            video_array[i].src = vid;
+        }
     }
 }
 req.send();
@@ -84,8 +88,8 @@ function resize() {
 }
 
 function redraw() {
-    focused_canvas.drawImage(video, ox, oy, w, h);
-    video.pause();
+    focused_canvas.drawImage(video_array[focusing - 1], ox, oy, w, h);
+    video_array[focusing - 1].pause();
     window.requestAnimationFrame(redraw);
 }
 
@@ -106,7 +110,7 @@ let controller = new ScrollMagic.Controller({
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
 let focused_canvas = document.getElementById(`canvas1`).getContext('2d');
-
+let focusing = 1;
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
         cur_frame: 0
@@ -117,8 +121,8 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            curTime = frame_per_model * model_name * time_per_frame;
-            video.currentTime = curTime.toPrecision(5);
+            focusing = model_name + 1;
+            video_array[focusing].currentTime = frame_per_model * model_name * time_per_frame;
         },
         onUpdateParams: [i]
     });
@@ -131,8 +135,8 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            video.currentTime = curTime.toPrecision(5);
+            focusing = model_name + 1;
+            video_array[focusing - 1].currentTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
         },
         onUpdateParams: [i]
     });
