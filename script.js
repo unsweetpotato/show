@@ -24,7 +24,7 @@ document.body.style.overflow = "hidden";
 // Create canvas and canvas
 for (var i = 0; i < model_n; i++) {
     document.body.innerHTML += `
-    <video id="video${i+1}" class="container" ></video>`;
+    <video id="video${i+1}" class="container" playsinline autoplay muted></video>`;
     
 }
 
@@ -66,14 +66,23 @@ req.send();
 function loading_end() {
     resize();
     for (var i = 0; i < model_n; i++) {
-        video_array[i].currentTime = i * 10 + 5;
+        video_array[i].currentTime = i * 10;
+        video_array[i].defaultPlaybackRate = 10;
+        video_array[i].play();
     }
+    setTimeout(function() {
+        for (var i = 0; i < model_n; i++) {
+            video_array[i].currentTime = i * 10 + time_per_frame;
+            video_array[i].pause();
+        }
+    }, 1000);
+    
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
 
     window.addEventListener('resize', resize, false);
-    window.requestAnimationFrame(redraw);
+    // window.requestAnimationFrame(redraw);
 }
 
 function resize() {
@@ -94,7 +103,7 @@ function resize() {
 }
 
 function redraw() {
-    video_array[focusing-1].pause();
+    // video_array[focusing-1].pause();
     window.requestAnimationFrame(redraw);
 }
 
