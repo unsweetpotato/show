@@ -57,12 +57,15 @@ req.onload = function () {
 req.send();
 
 function loading_end() {
+    resize();
+    video.playbackRate = 10; 
+    video.play();
+
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
 
     window.addEventListener('resize', resize, false);
-    resize();
     window.requestAnimationFrame(redraw);
 }
 
