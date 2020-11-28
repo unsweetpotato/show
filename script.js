@@ -7,11 +7,7 @@ const time_per_frame = 0.04,
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
-    let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
-    let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-    //let video = document.getElementById('video');
-    let curTime;
-    
+
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -20,21 +16,18 @@ function scrollTop() {
 scrollTop();
 document.body.style.overflow = "hidden";
 
-
 // Create canvas and canvas
-for (var i = 0; i < model_n; i++) {
-    document.body.innerHTML += `
-    <video id="video${i+1}" class="container" playsinline autoplay muted></video>`;
-    
-}
-
-let video_array = new Array(model_n);
-for (var i = 0 ; i < model_n; i++) {
-    video_array[i] = document.getElementById(`video${i+1}`);
+for (var i = 1; i <= model_n; i++) {
+    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
 }
 
 
-
+let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
+let video = document.getElementById('video');
+let curTime;
+video.defaultPlaybackRate  = 10.0; 
+video.play();
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -56,33 +49,20 @@ req.onload = function () {
     if (this.status === 200) {
         var videoBlob = this.response;
         var vid = URL.createObjectURL(videoBlob);
-        for (var i = 0; i < model_n; i++) {
-            video_array[i].src = vid;
-        }
+        video.src = vid;
     }
 }
 req.send();
 
 function loading_end() {
     resize();
-    for (var i = 0; i < model_n; i++) {
-        video_array[i].currentTime = i * 10;
-        video_array[i].defaultPlaybackRate = 10;
-        video_array[i].play();
-    }
-    setTimeout(function() {
-        for (var i = 0; i < model_n; i++) {
-            video_array[i].currentTime = i * 10 + time_per_frame;
-            video_array[i].pause();
-        }
-    }, 1000);
     
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
 
     window.addEventListener('resize', resize, false);
-    // window.requestAnimationFrame(redraw);
+    window.requestAnimationFrame(redraw);
 }
 
 function resize() {
@@ -95,15 +75,17 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
 
-    for (var i = 0; i < model_n; i++) {
-        video_array[i].width = wx;
-        video_array[i].height = wy;
-        video_array[i].style.margin = 0;
+    for (var i = 1; i <= model_n; i++) {
+        var canvas = document.getElementById(`canvas${i}`);
+        canvas.width = wx;
+        canvas.height = wy;
+        canvas.style.margin = 0;
     }
 }
 
 function redraw() {
-    // video_array[focusing-1].pause();
+    focused_canvas.drawImage(video, ox, oy, w, h);
+    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
@@ -123,17 +105,20 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
+let focused_canvas = document.getElementById(`canvas1`).getContext('2d');
+
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
         cur_frame: 0
     }
 
     // create tween
-    var enter_tween = TweenMax.to(`#video${i+1}`, 1, {
+    var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focusing = model_name + 1;
-            video_array[model_name].currentTime = frame_per_model * model_name * time_per_frame;
+            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
+            curTime = frame_per_model * model_name * time_per_frame;
+            video.currentTime = curTime.toPrecision(5);
         },
         onUpdateParams: [i]
     });
@@ -145,19 +130,20 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focusing = model_name + 1;
-            video_array[model_name].currentTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
+            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
+            curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
+            video.currentTime = curTime.toPrecision(5);
         },
         onUpdateParams: [i]
     });
 
-    var leave_tween = TweenMax.to(`#video${i+1}`, 1, {
+    var leave_tween = TweenMax.to(`#canvas${i+1}`, 1, {
         opacity: 0,
     });
 
     // enter canvas
     var enter_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#canvas${i+1}`,
             triggerHook: "onEnter",
             offset: -per_enter_duration,
             duration: per_enter_duration,
@@ -167,16 +153,16 @@ for (var i = 0; i < model_n; i++) {
 
     // center canvas
     var center_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#canvas${i+1}`,
             duration: per_center_duration,
         })
-        .setPin(`#video${i+1}`)
+        .setPin(`#canvas${i+1}`)
         .setTween(center_tween)
         .addTo(controller);
 
     // leave canvas
     var leave_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#canvas${i+1}`,
             triggerHook: "onLeave",
             offset: per_center_duration,
             duration: per_leave_duration,
