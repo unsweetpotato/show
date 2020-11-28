@@ -80,7 +80,8 @@ function resize() {
 video.playbackRate = 10;
 function redraw() {
     focused_canvas.drawImage(video, ox, oy, w, h);
-    // video.pause();
+    video.play();
+    video.pause();
     window.requestAnimationFrame(redraw);
 }
 
