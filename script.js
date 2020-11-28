@@ -82,7 +82,7 @@ function resize() {
 
 function redraw() {
     hidden_context.drawImage(video, ox, oy, w, h);
-    focused_canvas.drawImage(hidden_canvas, ox, oy, w, h);
+    focused_canvas.drawImage(hidden_canvas, 0, 0);
     video.pause();
     window.requestAnimationFrame(redraw);
 }
