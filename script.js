@@ -1,13 +1,12 @@
 var mp4_fat = document.currentScript.getAttribute('mp4_fat');
 var mp4_tall = document.currentScript.getAttribute('mp4_tall');
-var model_n = parseInt(document.currentScript.getAttribute('model_n'));
+var model_n = document.currentScript.getAttribute('model_n');
 
-const time_per_frame = 0.04;
-const frame_per_model = 250;
-
+const time_per_frame = 0.04,
+    frame_per_model = 250;
 let wx = window.innerWidth,
-    wy = window.innerHeight;
-let w, h, ox, oy;
+    wy = window.innerHeight,
+    w, h, ox, oy;
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
@@ -17,18 +16,14 @@ scrollTop();
 document.body.style.overflow = "hidden";
 
 // Create canvas and canvas
-// model_n + 1 th canvas is hidden canvas at which all image is rendered
-for (var t = 1; t <= model_n + 1; t++) {
-    console.log([t, model_n]);
-    document.body.innerHTML += `<canvas id="canvas${t}" class="container" margin:="unset"></canvas>`;
+for (var i = 1; i <= model_n; i++) {
+    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
 }
-document.getElementById(`canvas${model_n+1}`).style.display = 'none';
-let hidden_canvas = document.getElementById(`canvas${model_n+1}`);
-let hidden_context = hidden_canvas.getContext('2d');
+
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
-video.playbackRate = 10;
+
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -38,6 +33,7 @@ req.addEventListener("progress", function (evt) {
         var downloaed = parseInt(evt.loaded / 1024 / 1024);
         var total = parseInt(evt.total / 1024 / 1024);
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
+
         if (percentComplete >= 1) {
             loading_end();
         }
@@ -74,17 +70,16 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
 
-    for (var i = 1; i <= model_n + 1; i++) {
+    for (var i = 1; i <= model_n; i++) {
         var canvas = document.getElementById(`canvas${i}`);
         canvas.width = wx;
         canvas.height = wy;
         canvas.style.margin = 0;
     }
 }
-
+video.playbackRate = 10;
 function redraw() {
-    hidden_context.drawImage(video, ox, oy, w, h);
-    focused_canvas.drawImage(hidden_canvas, 0, 0);
+    focused_canvas.drawImage(video, ox, oy, w, h);
     // video.pause();
     window.requestAnimationFrame(redraw);
 }
@@ -117,8 +112,7 @@ for (var i = 0; i < model_n; i++) {
         opacity: 1,
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name)) * time_per_frame + 40;
-            hidden_context.drawImage(video, ox, oy, w, h);
+            video.currentTime = ((frame_per_model * model_name)) * time_per_frame;
         },
         onUpdateParams: [i]
     });
@@ -131,8 +125,7 @@ for (var i = 0; i < model_n; i++) {
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
-            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame + 40;
-            hidden_context.drawImage(video, ox, oy, w, h);
+            video.currentTime = ((frame_per_model * model_name) + currs[model_name].cur_frame) * time_per_frame;
         },
         onUpdateParams: [i]
     });
