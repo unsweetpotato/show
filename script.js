@@ -72,17 +72,17 @@ function loading_end() {
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
-    window.addEventListener('scroll', function () {
-        var st = window.pageYOffset;
-        if (st > lastScrollTop) {
-            focused_video.defaultPlaybackRate = minimumPlaybackRate;
-            focused_video.playbackRate = minimumPlaybackRate;
-        } else {
-            focused_video.defaultPlaybackRate = 0;
-            focused_video.playbackRate = 0;
-        }
-        lastScrollTop = st <= 0 ? 0 : st;
-    }, false);
+    // window.addEventListener('scroll', function () {
+    //     var st = window.pageYOffset;
+    //     if (st > lastScrollTop) {
+    //         focused_video.defaultPlaybackRate = minimumPlaybackRate;
+    //         focused_video.playbackRate = minimumPlaybackRate;
+    //     } else {
+    //         focused_video.defaultPlaybackRate = 0;
+    //         focused_video.playbackRate = 0;
+    //     }
+    //     lastScrollTop = st <= 0 ? 0 : st;
+    // }, false);
     window.addEventListener('resize', resize, false);
     scroll_ani_start();
 }
@@ -107,93 +107,89 @@ function resize() {
 }
 
 function scroll_ani_start() {
-    /*
- * Scroll Animation
- */
-const per_enter_duration = document.documentElement.clientHeight * 0.5,
-per_center_duration = document.documentElement.clientHeight * 4,
-per_leave_duration = document.documentElement.clientHeight * 0.5;
+    const per_enter_duration = document.documentElement.clientHeight * 0.5,
+        per_center_duration = document.documentElement.clientHeight * 4,
+        per_leave_duration = document.documentElement.clientHeight * 0.5;
 
-// init controller
-let controller = new ScrollMagic.Controller({
-globalSceneOptions: {
-    triggerHook: 0
-}
-});
-
-// TweenMax can tween any property of any object. We use this object to cycle through the array
-let currs = new Array(model_n);
-
-for (var i = 0; i < model_n; i++) {
-currs[i] = {
-    cur_frame: 0
-}
-
-// create tween
-var enter_tween = TweenMax.to(`#video${i}`, 1, {
-    opacity: 1,
-    onUpdate: function (model_name) {
-        try {
-            focused_video = video_array[model_name];
-            curTime = frame_per_model * model_name * time_per_frame;
-            focused_video.currentTime = curTime;
-        } catch {
-            return true;
+    // init controller
+    let controller = new ScrollMagic.Controller({
+        globalSceneOptions: {
+            triggerHook: 0
         }
-    },
-    onUpdateParams: [i]
-});
+    });
 
-var center_tween = TweenMax.to(currs[i], 1, {
-    cur_frame: frame_per_model - 1,
-    roundProps: "cur_frame",
-    repeat: 0,
-    immediateRender: true,
-    ease: Linear.easeNone,
-    onUpdate: function (model_name) {
-        try {
-            focused_video = video_array[model_name];
-            curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            focused_video.currentTime = curTime;
-        } catch {
-            return true;
+    // TweenMax can tween any property of any object. We use this object to cycle through the array
+    let currs = new Array(model_n);
+
+    for (var i = 0; i < model_n; i++) {
+        currs[i] = {
+            cur_frame: 0
         }
-    },
-    onUpdateParams: [i]
-});
 
-var leave_tween = TweenMax.to(`#video${i}`, 1, {
-    opacity: 0,
-});
+        // create tween
+        var enter_tween = TweenMax.to(`#video${i}`, 1, {
+            opacity: 1,
+            onUpdate: function (model_name) {
+                try {
+                    focused_video = video_array[model_name];
+                    curTime = frame_per_model * model_name * time_per_frame;
+                    focused_video.currentTime = curTime;
+                } catch {
+                    return true;
+                }
+            },
+            onUpdateParams: [i]
+        });
 
-// enter video
-var enter_scene = new ScrollMagic.Scene({
-        triggerElement: `#video${i}`,
-        triggerHook: "onEnter",
-        offset: -per_enter_duration,
-        duration: per_enter_duration,
-    })
-    .setTween(enter_tween)
-    .addTo(controller);
+        var center_tween = TweenMax.to(currs[i], 1, {
+            cur_frame: frame_per_model - 1,
+            roundProps: "cur_frame",
+            repeat: 0,
+            immediateRender: true,
+            ease: Linear.easeNone,
+            onUpdate: function (model_name) {
+                try {
+                    focused_video = video_array[model_name];
+                    curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
+                    focused_video.currentTime = curTime;
+                } catch {
+                    return true;
+                }
+            },
+            onUpdateParams: [i]
+        });
 
-// center video
-var center_scene = new ScrollMagic.Scene({
-        triggerElement: `#video${i}`,
-        duration: per_center_duration,
-    })
-    .setPin(`#video${i}`)
-    .setTween(center_tween)
-    .addTo(controller);
+        var leave_tween = TweenMax.to(`#video${i}`, 1, {
+            opacity: 0,
+        });
 
-// leave video
-var leave_scene = new ScrollMagic.Scene({
-        triggerElement: `#video${i}`,
-        triggerHook: "onLeave",
-        offset: per_center_duration,
-        duration: per_leave_duration,
-    })
-    .setTween(leave_tween)
-    .addTo(controller);
+        // enter video
+        var enter_scene = new ScrollMagic.Scene({
+                triggerElement: `#video${i}`,
+                triggerHook: "onEnter",
+                offset: -per_enter_duration,
+                duration: per_enter_duration,
+            })
+            .setTween(enter_tween)
+            .addTo(controller);
 
-}
+        // center video
+        var center_scene = new ScrollMagic.Scene({
+                triggerElement: `#video${i}`,
+                duration: per_center_duration,
+            })
+            .setPin(`#video${i}`)
+            .setTween(center_tween)
+            .addTo(controller);
+
+        // leave video
+        var leave_scene = new ScrollMagic.Scene({
+                triggerElement: `#video${i}`,
+                triggerHook: "onLeave",
+                offset: per_center_duration,
+                duration: per_leave_duration,
+            })
+            .setTween(leave_tween)
+            .addTo(controller);
+    }
 }
