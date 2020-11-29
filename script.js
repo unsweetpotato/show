@@ -28,7 +28,9 @@ scrollTop();
 for (var i = 0; i < model_n; i++) {
     document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline autoplay muted></video>`;
 }
-
+for (var i = 0; i < model_n; i++) {
+    video_array[i] = document.getElementById(`video${i}`);
+}
 
 // Video Loading
 function videoloading() {
@@ -78,9 +80,6 @@ function loading_end() {
         lastScrollTop = st <= 0 ? 0 : st;
     }, false);
     window.addEventListener('resize', resize, false);
-}
-for (var i = 0; i < model_n; i++) {
-    video_array[i] = document.getElementById(`video${i}`);
 }
 videoloading();
 
