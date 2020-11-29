@@ -27,7 +27,7 @@ let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let real_video = document.getElementById('real_video');
 let hidden_video = document.getElementById('hidden_video');
 let curTime;
-hidden_video.defaultPlaybackRate  = 2; 
+hidden_video.defaultPlaybackRate = 2;
 hidden_video.play();
 // Video Loading
 var req = new XMLHttpRequest();
@@ -58,7 +58,7 @@ req.send();
 
 function loading_end() {
     resize();
-    
+
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
@@ -87,8 +87,8 @@ function resize() {
 
 function redraw() {
     focused_canvas.drawImage(real_video, ox, oy, w, h);
-    real_video.play();
-    hidden_video.play();
+    // real_video.play();
+    // hidden_video.play();
     window.requestAnimationFrame(redraw);
 }
 
@@ -174,4 +174,17 @@ for (var i = 0; i < model_n; i++) {
         })
         .setTween(leave_tween)
         .addTo(controller);
+
+
+    var timer = null;
+    window.addEventListener('scroll', function () {
+        real_video.play();
+        if (timer !== null) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(function () {
+            real_video.pause();
+        }, 50);
+    }, false);
+
 }
