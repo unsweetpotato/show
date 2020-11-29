@@ -30,7 +30,13 @@ body {
     top: 65%;
     text-align: center;
 }
-
+.hidden_video { 
+    position: fixed;
+    left: 0px;
+    z-index: 999;
+    width: 100px;
+    height : 100px;
+}
 .container {
     display: block;
     width:100vw;
