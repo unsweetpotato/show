@@ -1,7 +1,7 @@
-window.onerror = function(msg, url, linenumber) {
-    alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
-    return true;
-}
+// window.onerror = function(msg, url, linenumber) {
+//     alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+//     return true;
+// }
 const mp4_fat = document.currentScript.getAttribute('mp4_fat');
 const mp4_tall = document.currentScript.getAttribute('mp4_tall');
 const model_n = document.currentScript.getAttribute('model_n');
@@ -12,10 +12,11 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy,
     lastScrollTop = 0;
-const minimumPlaybackRate = 0.01;
+const minimumPlaybackRate = 0.0625;
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let curTime;
+let video_array = new Array(model_n);
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
@@ -24,9 +25,10 @@ function scrollTop() {
 scrollTop();
 
 // Create video tag
-for (var i = 1; i <= model_n; i++) {
+for (var i = 0; i < model_n; i++) {
     document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline autoplay muted></video>`;
 }
+
 
 // Video Loading
 function videoloading() {
@@ -38,7 +40,6 @@ function videoloading() {
             var downloaed = parseInt(evt.loaded / 1024 / 1024);
             var total = parseInt(evt.total / 1024 / 1024);
             document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
-    
             if (percentComplete >= 1) {
                 loading_end();
             }
@@ -50,10 +51,9 @@ function videoloading() {
         if (this.status === 200) {
             var videoBlob = this.response;
             var vid = URL.createObjectURL(videoBlob);
-            for (var i = 1; i <= model_n; i++) {
-                document.getElementById(`video${i}`).src = vid;
+            for (var i = 0; i < model_n; i++) {
+                video_array[i].src = vid;
             }
-            
         }
     }
     req.send();
@@ -79,8 +79,10 @@ function loading_end() {
     }, false);
     window.addEventListener('resize', resize, false);
 }
+for (var i = 0; i < model_n; i++) {
+    video_array[i] = document.getElementById(`video${i}`);
+}
 videoloading();
-
 
 function resize() {
     wx = window.innerWidth, wy = window.innerHeight;
@@ -92,14 +94,13 @@ function resize() {
         ox = 0, oy = (wy - h) / 2;
     }
 
-    for (var i = 1; i <= model_n; i++) {
-        var video = document.getElementById(`video${i}`);
+    for (var i = 0; i < model_n; i++) {
+        var video = video_array[i];
         video.width = wx;
         video.height = wy;
         video.style.margin = 0;
     }
 }
-
 
 /*
  * Scroll Animation
@@ -124,10 +125,10 @@ for (var i = 0; i < model_n; i++) {
     }
 
     // create tween
-    var enter_tween = TweenMax.to(`#video${i+1}`, 1, {
+    var enter_tween = TweenMax.to(`#video${i}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_video = document.getElementById(`video${model_name + 1}`);
+            focused_video = video_array[model_name];
             curTime = frame_per_model * model_name * time_per_frame;
             focused_video.currentTime = curTime;
         },
@@ -139,22 +140,22 @@ for (var i = 0; i < model_n; i++) {
         roundProps: "cur_frame",
         repeat: 0,
         immediateRender: true,
-        ease: Linear.easeNone, // show every image the same ammount of time
+        ease: Linear.easeNone,
         onUpdate: function (model_name) {
-            focused_video = document.getElementById(`video${model_name + 1}`);
+            focused_video = video_array[model_name];
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
             focused_video.currentTime = curTime;
         },
         onUpdateParams: [i]
     });
 
-    var leave_tween = TweenMax.to(`#video${i+1}`, 1, {
+    var leave_tween = TweenMax.to(`#video${i}`, 1, {
         opacity: 0,
     });
 
     // enter video
     var enter_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#video${i}`,
             triggerHook: "onEnter",
             offset: -per_enter_duration,
             duration: per_enter_duration,
@@ -164,16 +165,16 @@ for (var i = 0; i < model_n; i++) {
 
     // center video
     var center_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#video${i}`,
             duration: per_center_duration,
         })
-        .setPin(`#video${i+1}`)
+        .setPin(`#video${i}`)
         .setTween(center_tween)
         .addTo(controller);
 
     // leave video
     var leave_scene = new ScrollMagic.Scene({
-            triggerElement: `#video${i+1}`,
+            triggerElement: `#video${i}`,
             triggerHook: "onLeave",
             offset: per_center_duration,
             duration: per_leave_duration,
