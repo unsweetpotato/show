@@ -24,10 +24,11 @@ for (var i = 1; i <= model_n; i++) {
 
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-let video = document.getElementById('video');
+let real_video = document.getElementById('real_video');
+let hidden_video = document.getElementById('hidden_video');
 let curTime;
-video.defaultPlaybackRate  = 10.0; 
-video.play();
+hidden_video.defaultPlaybackRate  = 2; 
+hidden_video.play();
 // Video Loading
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
@@ -49,7 +50,8 @@ req.onload = function () {
     if (this.status === 200) {
         var videoBlob = this.response;
         var vid = URL.createObjectURL(videoBlob);
-        video.src = vid;
+        real_video.src = vid;
+        hidden_video.src = vid;
     }
 }
 req.send();
@@ -84,8 +86,9 @@ function resize() {
 }
 
 function redraw() {
-    focused_canvas.drawImage(video, ox, oy, w, h);
-    video.pause();
+    focused_canvas.drawImage(real_video, ox, oy, w, h);
+    real_video.pause();
+    hidden_video.play();
     window.requestAnimationFrame(redraw);
 }
 
@@ -118,7 +121,8 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = frame_per_model * model_name * time_per_frame;
-            video.currentTime = curTime.toPrecision(5);
+            real_video.currentTime = curTime;
+            hidden_video.currentTime = curTime;
         },
         onUpdateParams: [i]
     });
@@ -132,7 +136,8 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            video.currentTime = curTime.toPrecision(5);
+            real_video.currentTime = curTime;
+            hidden_video.currentTime = curTime;
         },
         onUpdateParams: [i]
     });
