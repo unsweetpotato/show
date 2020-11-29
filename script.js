@@ -62,23 +62,26 @@ function loading_end() {
     window.addEventListener('scroll', function () {
         if (scrolling == false) { // 스크롤 시작
             var st = window.pageYOffset || document.documentElement.scrollTop;
-            if (video.paused) {
-                if (st > lastScrollTop){
-                    video.defaultPlaybackRate = 0.5;
-                 } else {
-                    video.defaultPlaybackRate = -0.5;
-                 }
-                 lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+            video.defaultPlaybackRate  = 0;
+            video.playbackRate = 0;
+            // if (video.paused) {
+                // if (st > lastScrollTop){
+                //     video.defaultPlaybackRate = 0.5;
+                //  } else {
+                //     video.defaultPlaybackRate = -0.5;
+                //  }
+            //      lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
                 video.play();
-            }
+            // }
             
-            scrolling = true;
-            timer = setTimeout(function() {
-                if (video.paused == false) {
-                    video.pause();
-                }
-                scrolling = false;
-          }, 100);
+            // scrolling = true;
+            // timer = setTimeout(function() {
+            //     video.defaultPlaybackRate = 0;
+                // if (video.paused == false) {
+                //     video.pause();
+                // }
+        //         scrolling = false;
+        //   }, 100);
         }
     }, false);
     window.addEventListener('resize', resize, false);
