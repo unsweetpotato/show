@@ -62,9 +62,12 @@ function videoloading() {
 }
 function loading_end() {
     resize();
-    focused_video.defaultPlaybackRate = minimumPlaybackRate;
-    focused_video.playbackRate = minimumPlaybackRate;
-    focused_video.play();
+    for (var i = 0; i < model_n; i++) {
+        video_array[i].defaultPlaybackRate = minimumPlaybackRate;
+        video_array[i].playbackRate = minimumPlaybackRate;
+        video_array[i].play();
+    }
+
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
