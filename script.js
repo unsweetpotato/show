@@ -1,7 +1,7 @@
-// window.onerror = function(msg, url, linenumber) {
-//     alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
-//     return true;
-// }
+window.onerror = function(msg, url, linenumber) {
+    alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+    return true;
+}
 const mp4_fat = document.currentScript.getAttribute('mp4_fat');
 const mp4_tall = document.currentScript.getAttribute('mp4_tall');
 const model_n = document.currentScript.getAttribute('model_n');
