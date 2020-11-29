@@ -10,8 +10,8 @@ const time_per_frame = 0.04,
     frame_per_model = 250;
 let wx = window.innerWidth,
     wy = window.innerHeight,
-    w, h, ox, oy;
-let lastScrollTop = 0;
+    w, h, ox, oy,
+    lastScrollTop = 0;
 const minimumPlaybackRate = 0.1;
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
@@ -75,12 +75,11 @@ function loading_end() {
             focused_video.defaultPlaybackRate = 0;
             focused_video.playbackRate = 0;
         }
-        focused_video.play();
+        // focused_video.play();
         lastScrollTop = st <= 0 ? 0 : st;
     }, false);
     window.addEventListener('resize', resize, false);
 }
-
 videoloading();
 
 
