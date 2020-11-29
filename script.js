@@ -18,9 +18,9 @@ function scrollTop() {
 scrollTop();
 document.body.style.overflow = "hidden";
 
-// Create canvas and canvas
+// Create video and video
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
+    document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline autoplay muted></video>`;
 }
 
 
@@ -50,33 +50,35 @@ req.onload = function () {
     if (this.status === 200) {
         var videoBlob = this.response;
         var vid = URL.createObjectURL(videoBlob);
-        video.src = vid;
+        for (var i = 1; i <= model_n; i++) {
+            document.getElementById(`video${i}`).src = vid;
+        }
+        
     }
 }
 req.send();
 
 function loading_end() {
     resize();
-    video.defaultPlaybackRate = minimumPlaybackRate;
-    video.playbackRate = minimumPlaybackRate;
-    video.play();
+    focused_video.defaultPlaybackRate = minimumPlaybackRate;
+    focused_video.playbackRate = minimumPlaybackRate;
+    focused_video.play();
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('scroll', function () {
         var st = window.pageYOffset;
         if (st > lastScrollTop) {
-            video.defaultPlaybackRate = minimumPlaybackRate;
-            video.playbackRate = minimumPlaybackRate;
+            focused_video.defaultPlaybackRate = minimumPlaybackRate;
+            focused_video.playbackRate = minimumPlaybackRate;
         } else {
-            video.defaultPlaybackRate = -minimumPlaybackRate;
+            focused_video.defaultPlaybackRate = -minimumPlaybackRate;
             // video.playbackRate = -minimumPlaybackRate*100;
         }
-        video.play();
+        focused_video.play();
         lastScrollTop = st <= 0 ? 0 : st;
     }, false);
     window.addEventListener('resize', resize, false);
-    window.requestAnimationFrame(redraw);
 }
 
 function resize() {
@@ -90,17 +92,13 @@ function resize() {
     }
 
     for (var i = 1; i <= model_n; i++) {
-        var canvas = document.getElementById(`canvas${i}`);
-        canvas.width = wx;
-        canvas.height = wy;
-        canvas.style.margin = 0;
+        var video = document.getElementById(`video${i}`);
+        focused_video.width = wx;
+        focused_video.height = wy;
+        focused_video.style.margin = 0;
     }
 }
 
-function redraw() {
-    focused_canvas.drawImage(video, ox, oy, w, h);
-    window.requestAnimationFrame(redraw);
-}
 
 /*
  * Scroll Animation
@@ -118,7 +116,6 @@ let controller = new ScrollMagic.Controller({
 
 // TweenMax can tween any property of any object. We use this object to cycle through the array
 let currs = new Array(model_n);
-let focused_canvas = document.getElementById(`canvas1`).getContext('2d');
 
 for (var i = 0; i < model_n; i++) {
     currs[i] = {
@@ -126,12 +123,12 @@ for (var i = 0; i < model_n; i++) {
     }
 
     // create tween
-    var enter_tween = TweenMax.to(`#canvas${i+1}`, 1, {
+    var enter_tween = TweenMax.to(`#video${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
+            focused_video = document.getElementById(`video${model_name + 1}`)
             curTime = frame_per_model * model_name * time_per_frame;
-            video.currentTime = curTime;
+            focused_video.currentTime = curTime;
         },
         onUpdateParams: [i]
     });
@@ -143,20 +140,20 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
+            focused_video = document.getElementById(`video${model_name + 1}`)
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            video.currentTime = curTime;
+            focused_video.currentTime = curTime;
         },
         onUpdateParams: [i]
     });
 
-    var leave_tween = TweenMax.to(`#canvas${i+1}`, 1, {
+    var leave_tween = TweenMax.to(`#video${i+1}`, 1, {
         opacity: 0,
     });
 
-    // enter canvas
+    // enter video
     var enter_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             triggerHook: "onEnter",
             offset: -per_enter_duration,
             duration: per_enter_duration,
@@ -164,28 +161,23 @@ for (var i = 0; i < model_n; i++) {
         .setTween(enter_tween)
         .addTo(controller);
 
-    // center canvas
+    // center video
     var center_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             duration: per_center_duration,
         })
-        .setPin(`#canvas${i+1}`)
+        .setPin(`#video${i+1}`)
         .setTween(center_tween)
         .addTo(controller);
 
-    // leave canvas
+    // leave video
     var leave_scene = new ScrollMagic.Scene({
-            triggerElement: `#canvas${i+1}`,
+            triggerElement: `#video${i+1}`,
             triggerHook: "onLeave",
             offset: per_center_duration,
             duration: per_leave_duration,
         })
         .setTween(leave_tween)
         .addTo(controller);
-
-
-
-
-
 
 }
