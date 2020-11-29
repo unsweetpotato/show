@@ -62,8 +62,8 @@ function loading_end() {
     window.addEventListener('scroll', function () {
         if (scrolling == false) { // 스크롤 시작
             var st = window.pageYOffset || document.documentElement.scrollTop;
-            video.defaultPlaybackRate  = 0;
-            video.playbackRate = 0;
+            video.defaultPlaybackRate  = 0.01;
+            video.playbackRate = 0.01;
             // if (video.paused) {
                 // if (st > lastScrollTop){
                 //     video.defaultPlaybackRate = 0.5;
