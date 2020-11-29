@@ -1,6 +1,3 @@
-
-self.onerror=function() { return true; } 
-
 var mp4_fat = document.currentScript.getAttribute('mp4_fat');
 var mp4_tall = document.currentScript.getAttribute('mp4_tall');
 var model_n = document.currentScript.getAttribute('model_n');
