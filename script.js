@@ -14,15 +14,12 @@ function scrollTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
-
 scrollTop();
-document.body.style.overflow = "hidden";
 
 // Create video and video
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline autoplay muted></video>`;
+    document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline muted></video>`;
 }
-
 
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
