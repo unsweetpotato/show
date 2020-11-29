@@ -130,9 +130,14 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#video${i}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
+            try{
             focused_video = video_array[model_name];
             curTime = frame_per_model * model_name * time_per_frame;
             focused_video.currentTime = curTime;
+        }
+        catch[
+        return true;
+        ]
         },
         onUpdateParams: [i]
     });
@@ -144,9 +149,16 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone,
         onUpdate: function (model_name) {
+            try {
+
+            
             focused_video = video_array[model_name];
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
             focused_video.currentTime = curTime;
+            }
+            catch {
+                return true;
+            }
         },
         onUpdateParams: [i]
     });
