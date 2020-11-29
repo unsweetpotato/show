@@ -1,6 +1,10 @@
-var mp4_fat = document.currentScript.getAttribute('mp4_fat');
-var mp4_tall = document.currentScript.getAttribute('mp4_tall');
-var model_n = document.currentScript.getAttribute('model_n');
+window.onerror = function(msg, url, linenumber) {
+    alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+    return true;
+}
+const mp4_fat = document.currentScript.getAttribute('mp4_fat');
+const\ mp4_tall = document.currentScript.getAttribute('mp4_tall');
+const model_n = document.currentScript.getAttribute('model_n');
 
 const time_per_frame = 0.04,
     frame_per_model = 250;
@@ -9,6 +13,9 @@ let wx = window.innerWidth,
     w, h, ox, oy;
 let lastScrollTop = 0;
 const minimumPlaybackRate = 0.1;
+let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
+let curTime;
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
@@ -16,44 +23,41 @@ function scrollTop() {
 }
 scrollTop();
 
-// Create video and video
+// Create video tag
 for (var i = 1; i <= model_n; i++) {
-    document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline muted></video>`;
+    document.body.innerHTML += `<video id="video${i}" class="container" crossorigin="anonymous" playsinline autoplay muted></video>`;
 }
-
-let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
-let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-let curTime;
 
 // Video Loading
-var req = new XMLHttpRequest();
-req.addEventListener("progress", function (evt) {
-    scrollTop();
-    if (evt.lengthComputable) {
-        var percentComplete = evt.loaded / evt.total;
-        var downloaed = parseInt(evt.loaded / 1024 / 1024);
-        var total = parseInt(evt.total / 1024 / 1024);
-        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
-
-        if (percentComplete >= 1) {
-            loading_end();
+function videoloading() {
+    var req = new XMLHttpRequest();
+    req.addEventListener("progress", function (evt) {
+        scrollTop();
+        if (evt.lengthComputable) {
+            var percentComplete = evt.loaded / evt.total;
+            var downloaed = parseInt(evt.loaded / 1024 / 1024);
+            var total = parseInt(evt.total / 1024 / 1024);
+            document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
+    
+            if (percentComplete >= 1) {
+                loading_end();
+            }
+        }
+    }, true);
+    req.open('GET', video_mp4_url, true);
+    req.responseType = 'blob';
+    req.onload = function () {
+        if (this.status === 200) {
+            var videoBlob = this.response;
+            var vid = URL.createObjectURL(videoBlob);
+            for (var i = 1; i <= model_n; i++) {
+                document.getElementById(`video${i}`).src = vid;
+            }
+            
         }
     }
-}, true);
-req.open('GET', video_mp4_url, true);
-req.responseType = 'blob';
-req.onload = function () {
-    if (this.status === 200) {
-        var videoBlob = this.response;
-        var vid = URL.createObjectURL(videoBlob);
-        for (var i = 1; i <= model_n; i++) {
-            document.getElementById(`video${i}`).src = vid;
-        }
-        
-    }
+    req.send();
 }
-req.send();
-
 function loading_end() {
     resize();
     focused_video.defaultPlaybackRate = minimumPlaybackRate;
@@ -76,6 +80,9 @@ function loading_end() {
     }, false);
     window.addEventListener('resize', resize, false);
 }
+
+videoloading();
+
 
 function resize() {
     wx = window.innerWidth, wy = window.innerHeight;
