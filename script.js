@@ -1,3 +1,6 @@
+
+self.onerror=function() { return true; } 
+
 var mp4_fat = document.currentScript.getAttribute('mp4_fat');
 var mp4_tall = document.currentScript.getAttribute('mp4_tall');
 var model_n = document.currentScript.getAttribute('model_n');
@@ -8,7 +11,7 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 let lastScrollTop = 0;
-const minimumPlaybackRate = 0.0625;
+const minimumPlaybackRate = 0.1;
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
@@ -72,8 +75,8 @@ function loading_end() {
             focused_video.defaultPlaybackRate = minimumPlaybackRate;
             focused_video.playbackRate = minimumPlaybackRate;
         } else {
-            focused_video.defaultPlaybackRate = -minimumPlaybackRate;
-            // video.playbackRate = -minimumPlaybackRate*100;
+            focused_video.defaultPlaybackRate = 0;
+            focused_video.playbackRate = 0;
         }
         focused_video.play();
         lastScrollTop = st <= 0 ? 0 : st;
@@ -93,9 +96,9 @@ function resize() {
 
     for (var i = 1; i <= model_n; i++) {
         var video = document.getElementById(`video${i}`);
-        focused_video.width = wx;
-        focused_video.height = wy;
-        focused_video.style.margin = 0;
+        video.width = wx;
+        video.height = wy;
+        video.style.margin = 0;
     }
 }
 
@@ -126,7 +129,7 @@ for (var i = 0; i < model_n; i++) {
     var enter_tween = TweenMax.to(`#video${i+1}`, 1, {
         opacity: 1,
         onUpdate: function (model_name) {
-            focused_video = document.getElementById(`video${model_name + 1}`)
+            focused_video = document.getElementById(`video${model_name + 1}`);
             curTime = frame_per_model * model_name * time_per_frame;
             focused_video.currentTime = curTime;
         },
@@ -140,7 +143,7 @@ for (var i = 0; i < model_n; i++) {
         immediateRender: true,
         ease: Linear.easeNone, // show every image the same ammount of time
         onUpdate: function (model_name) {
-            focused_video = document.getElementById(`video${model_name + 1}`)
+            focused_video = document.getElementById(`video${model_name + 1}`);
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
             focused_video.currentTime = curTime;
         },
