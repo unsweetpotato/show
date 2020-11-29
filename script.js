@@ -23,7 +23,6 @@ for (var i = 1; i <= model_n; i++) {
 
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
-let video = document.getElementById('video');
 let curTime;
 
 // Video Loading
