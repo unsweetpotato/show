@@ -121,9 +121,6 @@ for (var i = 0; i < model_n; i++) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = frame_per_model * model_name * time_per_frame;
             video.currentTime = curTime;
-            if (video.paused == false) {
-                video.pause();
-            }
         },
         onUpdateParams: [i]
     });
@@ -189,7 +186,7 @@ for (var i = 0; i < model_n; i++) {
                     video.pause();
                 }
                 scrolling = false;
-          }, 200);
+          }, 100);
         }
         
         
