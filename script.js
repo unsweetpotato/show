@@ -8,7 +8,7 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 let lastScrollTop = 0;
-const minimumPlaybackRate = 0.1;
+const minimumPlaybackRate = 0;
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
