@@ -7,6 +7,8 @@ const time_per_frame = 0.04,
 let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
+let lastScrollTop = 0;
+const minimumPlaybackRate = 0.0625;
 
 function scrollTop() {
     document.body.scrollTop = 0; // For Safari
@@ -55,33 +57,22 @@ req.send();
 
 function loading_end() {
     resize();
-
+    video.defaultPlaybackRate = minimumPlaybackRate;
+    video.playbackRate = minimumPlaybackRate;
+    video.play();
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('scroll', function () {
-        if (scrolling == false) { // 스크롤 시작
-            var st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st > lastScrollTop) {
-                video.defaultPlaybackRate = 0.001;
-                video.playbackRate = 0.001;
-            } else {
-                video.defaultPlaybackRate = -0.001;
-                video.playbackRate = -0.001;
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
-            video.play();
-            // }
-
-            // scrolling = true;
-            // timer = setTimeout(function() {
-            //     video.defaultPlaybackRate = 0;
-            // if (video.paused == false) {
-            //     video.pause();
-            // }
-            //         scrolling = false;
-            //   }, 100);
+        var st = window.pageYOffset;
+        if (st > lastScrollTop) {
+            video.defaultPlaybackRate = minimumPlaybackRate;
+            video.playbackRate = minimumPlaybackRate;
+        } else {
+            video.defaultPlaybackRate = -minimumPlaybackRate;
+            // video.playbackRate = -minimumPlaybackRate*100;
         }
+        lastScrollTop = st <= 0 ? 0 : st;
     }, false);
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
@@ -192,8 +183,7 @@ for (var i = 0; i < model_n; i++) {
         .addTo(controller);
 
 
-    var scrolling = false;
-    var lastScrollTop = 0;
+
 
 
 
