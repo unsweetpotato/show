@@ -83,11 +83,7 @@ function resize() {
 }
 
 function redraw() {
-    
     focused_canvas.drawImage(video, ox, oy, w, h);
-    
-    // video.play();
-    // hidden_video.play();
     window.requestAnimationFrame(redraw);
 }
 
@@ -174,9 +170,18 @@ for (var i = 0; i < model_n; i++) {
 
 
     var scrolling = false;
+    var lastScrollTop = 0;
+
     window.addEventListener('scroll', function () {
         if (scrolling == false) { // 스크롤 시작
+            var st = window.pageYOffset || document.documentElement.scrollTop;
             if (video.paused) {
+                if (st > lastScrollTop){
+                    video.defaultPlaybackRate = 2;
+                 } else {
+                    video.defaultPlaybackRate = -2;
+                 }
+                 lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
                 video.play();
             }
             
