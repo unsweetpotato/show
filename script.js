@@ -87,7 +87,7 @@ function resize() {
 
 function redraw() {
     focused_canvas.drawImage(real_video, ox, oy, w, h);
-    real_video.pause();
+    real_video.play();
     hidden_video.play();
     window.requestAnimationFrame(redraw);
 }
