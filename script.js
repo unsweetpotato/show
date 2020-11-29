@@ -12,7 +12,7 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy,
     lastScrollTop = 0;
-const minimumPlaybackRate = 0.0625;
+const minimumPlaybackRate = 0.1;
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let curTime;
