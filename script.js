@@ -72,6 +72,7 @@ function loading_end() {
             video.defaultPlaybackRate = -minimumPlaybackRate;
             // video.playbackRate = -minimumPlaybackRate*100;
         }
+        video.play();
         lastScrollTop = st <= 0 ? 0 : st;
     }, false);
     window.addEventListener('resize', resize, false);
