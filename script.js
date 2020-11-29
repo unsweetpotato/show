@@ -121,7 +121,9 @@ for (var i = 0; i < model_n; i++) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = frame_per_model * model_name * time_per_frame;
             video.currentTime = curTime;
-            video.pause();
+            if (video.paused == false) {
+                video.pause();
+            }
         },
         onUpdateParams: [i]
     });
@@ -177,12 +179,15 @@ for (var i = 0; i < model_n; i++) {
     var scrolling = false;
     window.addEventListener('scroll', function () {
         if (scrolling == false) { // 스크롤 시작
-            console.log("scrolling");
-            video.play();
+            if (video.paused) {
+                video.play();
+            }
+            
             scrolling = true;
             timer = setTimeout(function() {
-                video.pause();
-                console.log("scroll end");
+                if (video.paused == false) {
+                    video.pause();
+                }
                 scrolling = false;
           }, 200);
         }
