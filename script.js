@@ -85,7 +85,7 @@ function resize() {
 function redraw() {
     
     focused_canvas.drawImage(video, ox, oy, w, h);
-    video.pause();
+    
     // video.play();
     // hidden_video.play();
     window.requestAnimationFrame(redraw);
@@ -174,9 +174,20 @@ for (var i = 0; i < model_n; i++) {
         .addTo(controller);
 
 
-    var timer = null;
+    var scrolling = false;
     window.addEventListener('scroll', function () {
-        video.play();
+        if (scrolling == false) { // 스크롤 시작
+            console.log("scrolling");
+            video.play();
+            scrolling = true;
+            timer = setTimeout(function() {
+                video.pause();
+                console.log("scroll end");
+                scrolling = false;
+          }, 200);
+        }
+        
+        
     }, false);
 
 }
