@@ -16,10 +16,11 @@ body {
 .logo_text {
     position: absolute;
     width: 100%;
-    font-weight: 600;
+    font-weight: 400;
     top: 50%;
     z-index: 10;
     color:white;
+    
     font-family: 'Helvetica';
     text-align: center;
 }
