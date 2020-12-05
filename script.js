@@ -64,7 +64,6 @@ function loading_end() {
     video.playbackRate = minimumPlaybackRate;
     video.play();
     document.body.style.overflow = 'visible';
-    document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('scroll', setScrollDirection);
     window.addEventListener('resize', resize, false);
