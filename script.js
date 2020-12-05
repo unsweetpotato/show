@@ -61,8 +61,8 @@ req.send();
 function loading_end() {
     resize();
     document.body.style.overflow = 'visible';
-    video.defaultPlaybackRate = 1;
-    video.playbackRate = 1;
+    video.defaultPlaybackRate = 10;
+    video.playbackRate = 10;
     
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('resize', resize, false);
