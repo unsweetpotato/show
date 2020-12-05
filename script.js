@@ -63,7 +63,7 @@ function loading_end() {
     document.body.style.overflow = 'visible';
     video.defaultPlaybackRate = 10;
     video.playbackRate = 10;
-    
+    video.pause();
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
