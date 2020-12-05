@@ -10,7 +10,7 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 let lastScrollTop = 0;
-const minimumPlaybackRate = 1;
+const minimumPlaybackRate = 0;
 
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
@@ -63,7 +63,7 @@ function loading_end() {
     video.defaultPlaybackRate = minimumPlaybackRate;
     video.playbackRate = minimumPlaybackRate;
     video.play();
-    document.body.style.overflow = 'visible';
+    document.body.style.overflow = 'visible'
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('scroll', setScrollDirection);
     window.addEventListener('resize', resize, false);
@@ -75,6 +75,9 @@ function setScrollDirection() {
     if (st > lastScrollTop) {
         video.defaultPlaybackRate = minimumPlaybackRate;
         video.playbackRate = minimumPlaybackRate;
+    } else {
+        video.defaultPlaybackRate = 0;
+        video.playbackRate = 0;
     }
     lastScrollTop = st <= 0 ? 0 : st;
 }
