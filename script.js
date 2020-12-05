@@ -68,6 +68,10 @@ function loading_end() {
     window.addEventListener('scroll', setScrollDirection);
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
+    video.onseeked = () => {
+        window.requestAnimationFrame(redraw);
+    }
+    
 }
 
 function setScrollDirection() {
