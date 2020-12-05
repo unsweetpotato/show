@@ -10,7 +10,6 @@ let wx = window.innerWidth,
     wy = window.innerHeight,
     w, h, ox, oy;
 let lastScrollTop = 0;
-const minimumPlaybackRate = 0;
 
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
@@ -61,9 +60,6 @@ req.send();
 function loading_end() {
     resize();
     document.body.style.overflow = 'visible';
-    video.defaultPlaybackRate = 10;
-    video.playbackRate = 10;
-    video.pause();
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
@@ -123,9 +119,6 @@ for (var i = 0; i < model_n; i++) {
             curTime = frame_per_model * model_name * time_per_frame;
             if(video.currentTime != curTime) {
                 video.currentTime = curTime;
-            }
-            if(video.paused) {
-                video.play();
             }
         },
         onUpdateParams: [i]
