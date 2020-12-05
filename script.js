@@ -63,7 +63,7 @@ function loading_end() {
     document.body.style.overflow = 'visible';
     video.defaultPlaybackRate = 0;
     video.playbackRate = 0;
-    video.play();
+    
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
@@ -88,6 +88,9 @@ function resize() {
 }
 
 function redraw() {
+    if(video.paused) {
+        video.play();
+    }
     focused_canvas.drawImage(video, ox, oy, w, h);
     window.requestAnimationFrame(redraw);
 }
@@ -121,7 +124,9 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = frame_per_model * model_name * time_per_frame;
-            video.currentTime = curTime;
+            if(video.currentTime != curTime) {
+                video.currentTime = curTime;
+            }
         },
         onUpdateParams: [i]
     });
@@ -135,7 +140,9 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            video.currentTime = curTime;
+            if(video.currentTime != curTime) {
+                video.currentTime = curTime;
+            }
         },
         onUpdateParams: [i]
     });
