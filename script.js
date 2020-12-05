@@ -33,6 +33,8 @@ resize();
 
 // Video Loading
 var req = new XMLHttpRequest();
+req.open('GET', video_mp4_url, true);
+req.responseType = 'blob';
 req.addEventListener("progress", function (evt) {
     scrollTop();
     resize();
@@ -47,43 +49,24 @@ req.addEventListener("progress", function (evt) {
         }
     }
 }, true);
-req.open('GET', video_mp4_url, true);
-req.responseType = 'blob';
-req.onload = function () {
+req.addEventListener('load', function (evt) {
     if (this.status === 200) {
         var videoBlob = this.response;
         var vid = URL.createObjectURL(videoBlob);
         video.src = vid;
     }
-}
+}, true);
 req.send();
 
 function loading_end() {
     resize();
-    video.defaultPlaybackRate = minimumPlaybackRate;
-    video.playbackRate = minimumPlaybackRate;
-    video.play();
     document.body.style.overflow = 'visible';
+    video.defaultPlaybackRate = 0;
+    video.playbackRate = 0;
+    video.play();
     document.getElementById('loading_text').style.display = 'none';
-    window.addEventListener('scroll', setScrollDirection);
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
-    video.onseeked = () => {
-        window.requestAnimationFrame(redraw);
-    }
-    
-}
-
-function setScrollDirection() {
-    var st = window.pageYOffset;
-    if (st > lastScrollTop) {
-        video.defaultPlaybackRate = minimumPlaybackRate;
-        video.playbackRate = minimumPlaybackRate;
-    } else {
-        video.defaultPlaybackRate = 0;
-        video.playbackRate = 0;
-    }
-    lastScrollTop = st <= 0 ? 0 : st;
 }
 
 function resize() {
