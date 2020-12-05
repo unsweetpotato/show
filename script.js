@@ -35,6 +35,7 @@ resize();
 var req = new XMLHttpRequest();
 req.addEventListener("progress", function (evt) {
     scrollTop();
+    resize();
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
         document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
