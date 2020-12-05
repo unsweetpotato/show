@@ -5,39 +5,29 @@ body {
     margin: 0;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    /* overflow: hidden; */
 }
-
 body::-webkit-scrollbar {
     display: none;
 }
-
 body {
     overflow: hidden;
     background-color: #dddddd;
 }
-
 .logo_image {
     position: absolute;
     width: 20vw;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    opacity:0;
 }
-
 .logo_text {
     position: absolute;
     width: 100%;
     font-weight: 500;
-    top: 65%;
+    top: 50%;
+    z-index: 10;
     text-align: center;
-}
-.hidden_video { 
-    position: fixed;
-    left: 0px;
-    z-index: 999;
-    width: 100px;
-    height : 100px;
 }
 .container {
     display: block;

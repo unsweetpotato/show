@@ -1,5 +1,7 @@
 var mp4_fat = document.currentScript.getAttribute('mp4_fat');
 var mp4_tall = document.currentScript.getAttribute('mp4_tall');
+var thumb_fat = document.currentScript.getAttribute('thumb_fat');
+var thumb_tall = document.currentScript.getAttribute('thumb_tall');
 var model_n = document.currentScript.getAttribute('model_n');
 
 const time_per_frame = 0.04,
@@ -10,24 +12,24 @@ let wx = window.innerWidth,
 let lastScrollTop = 0;
 const minimumPlaybackRate = 0;
 
-function scrollTop() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-
-scrollTop();
-document.body.style.overflow = "hidden";
-
 // Create canvas and canvas
 for (var i = 1; i <= model_n; i++) {
     document.body.innerHTML += `<canvas id="canvas${i}" class="container" margin:="unset"></canvas>`;
 }
 
-
+function scrollTop(){
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
 let video_mp4_url = wx / wy >= 1920 / 1080 * 0.6 ? mp4_fat : mp4_tall;
+let thumb_url = wx / wy >= 1920 / 1080 * 0.6 ? thumb_fat : thumb_tall;
 let ratio = wx / wy >= 1920 / 1080 * 0.6 ? 1920 / 1080 : 1080 / 1920;
 let video = document.getElementById('video');
+let thumb = new Image();
 let curTime;
+
+thumb.src = thumb_url;
+resize();
 
 // Video Loading
 var req = new XMLHttpRequest();
@@ -35,10 +37,10 @@ req.addEventListener("progress", function (evt) {
     scrollTop();
     if (evt.lengthComputable) {
         var percentComplete = evt.loaded / evt.total;
-        var downloaed = parseInt(evt.loaded / 1024 / 1024);
-        var total = parseInt(evt.total / 1024 / 1024);
-        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading<br>${downloaed}MB / ${total}MB`;
-
+        document.getElementById('loading_text').innerHTML = `${parseInt(percentComplete*100)}% Loading`;
+        document.getElementById('canvas1').style.filter = `blur(${(1-percentComplete)*80}px)`;
+        focused_canvas.drawImage(thumb, ox, oy, w, h);
+        
         if (percentComplete >= 1) {
             loading_end();
         }
@@ -63,19 +65,21 @@ function loading_end() {
     document.body.style.overflow = 'visible';
     document.getElementById('loading_logo').style.display = 'none';
     document.getElementById('loading_text').style.display = 'none';
-    window.addEventListener('scroll', function () {
-        var st = window.pageYOffset;
-        if (st > lastScrollTop) {
-            video.defaultPlaybackRate = minimumPlaybackRate;
-            video.playbackRate = minimumPlaybackRate;
-        } else {
-            video.defaultPlaybackRate = 0;
-            video.playbackRate = 0;
-        }
-        lastScrollTop = st <= 0 ? 0 : st;
-    }, false);
+    window.addEventListener('scroll', setScrollDirection);
     window.addEventListener('resize', resize, false);
     window.requestAnimationFrame(redraw);
+}
+
+function setScrollDirection() {
+    var st = window.pageYOffset;
+    if (st > lastScrollTop) {
+        video.defaultPlaybackRate = minimumPlaybackRate;
+        video.playbackRate = minimumPlaybackRate;
+    } else {
+        video.defaultPlaybackRate = 0;
+        video.playbackRate = 0;
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
 }
 
 function resize() {
