@@ -1,1 +1,0 @@
-# Unsweetpotato, 짐동, Show
