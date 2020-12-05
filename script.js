@@ -88,9 +88,6 @@ function resize() {
 }
 
 function redraw() {
-    if(video.paused) {
-        video.play();
-    }
     focused_canvas.drawImage(video, ox, oy, w, h);
     window.requestAnimationFrame(redraw);
 }
@@ -127,6 +124,9 @@ for (var i = 0; i < model_n; i++) {
             if(video.currentTime != curTime) {
                 video.currentTime = curTime;
             }
+            if(video.paused) {
+                video.play();
+            }
         },
         onUpdateParams: [i]
     });
@@ -140,8 +140,9 @@ for (var i = 0; i < model_n; i++) {
         onUpdate: function (model_name) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
-            if(video.currentTime != curTime) {
-                video.currentTime = curTime;
+            video.currentTime = curTime;
+            if(video.paused == false) {
+                video.pause();
             }
         },
         onUpdateParams: [i]
