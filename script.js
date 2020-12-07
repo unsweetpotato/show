@@ -59,6 +59,7 @@ req.send();
 
 function loading_end() {
     resize();
+    video.pause();
     document.body.style.overflow = 'visible';
     document.getElementById('loading_text').style.display = 'none';
     window.addEventListener('resize', resize, false);
@@ -134,9 +135,6 @@ for (var i = 0; i < model_n; i++) {
             focused_canvas = document.getElementById(`canvas${model_name + 1}`).getContext('2d');
             curTime = (frame_per_model * model_name + currs[model_name].cur_frame) * time_per_frame;
             video.currentTime = curTime;
-            if(video.paused == false) {
-                video.pause();
-            }
         },
         onUpdateParams: [i]
     });
